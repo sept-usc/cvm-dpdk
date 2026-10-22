@@ -73,6 +73,23 @@ epoll descriptors; it does not send packets or validate NIC interrupt delivery.
 IPsec performance measures library prepare/process calls and bypasses actual
 encryption, even though its setup now uses valid crypto sessions.
 
+With `net/virtio`, `net/vhost`, `net/ring`, and both `test` and `test-pmd`
+enabled, the CLI regression also exercises pool selection and `ethdev_api`:
+
+```sh
+python3 scripts/test-dpdk-cli.py /path/to/dpdk/build
+```
+
+It requires four CPUs on one NUMA node. Two sequential ring-PMD runs must
+actually transmit packets with default NUMA allocation and with `--no-numa`.
+A testpmd vhost backend then lets virtio-user execute the original queue-state
+checks for two RX/TX queues, including before start and after stop. Each
+process uses 512 MiB ordinary memory. This needs local Unix sockets but no
+root, NIC or hugepages. `--only forwarding` and `--only ethdev` isolate the
+groups. Logs and JSON results go under `cvm-dpdk-cli-tests/`; use `--output`
+to select a fresh directory for a rerun. See the
+[CLI validation](../../docs/VALIDATION-2026-10-22-cli-pools.md).
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh

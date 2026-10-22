@@ -1,0 +1,37 @@
+From 49c5119e01148d25588728836434b97818926c9d Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 01:31:45 -0700
+Subject: [PATCH] app/testpmd: select the non-NUMA pool for forwarding lcores
+
+---
+ app/test-pmd/testpmd.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/app/test-pmd/testpmd.c b/app/test-pmd/testpmd.c
+index b5a2f1b..7d34511 100644
+--- a/app/test-pmd/testpmd.c
++++ b/app/test-pmd/testpmd.c
+@@ -1924,11 +1924,15 @@ init_config(void)
+ 	 * Records which Mbuf pool to use by each logical core, if needed.
+ 	 */
+ 	for (lc_id = 0; lc_id < nb_lcores; lc_id++) {
+-		mbp = mbuf_pool_find(
+-			rte_lcore_to_socket_id(fwd_lcores_cpuids[lc_id]), 0);
+-
+-		if (mbp == NULL)
+-			mbp = mbuf_pool_find(0, 0);
++		if (numa_support) {
++			mbp = mbuf_pool_find(
++				rte_lcore_to_socket_id(fwd_lcores_cpuids[lc_id]), 0);
++			if (mbp == NULL)
++				mbp = mbuf_pool_find(0, 0);
++		} else {
++			/* Match the pool created for non-NUMA RX queues. */
++			mbp = mbuf_pool_find((unsigned int)SOCKET_ID_ANY, 0);
++		}
+ 		/* Generators, packet splitting and GSO process private data. */
+ 		mbp = cvm_mbuf_bridge_cpu_pool(mbp);
+ 		if (mbp == NULL)
+-- 
+2.51.0
+

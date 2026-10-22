@@ -580,5 +580,28 @@
     "enable_drivers": "bus/*,common/mlx5,net/mlx5,net/null,net/ring,net/pcap,net/tap,net/vhost,net/virtio,mempool/ring,event/sw,event/dsw,event/skeleton,dma/skeleton,raw/skeleton,crypto/null,crypto/openssl,crypto/ipsec_mb,crypto/scheduler,compress/zlib,net/bonding",
     "platform": "generic",
     "tests": true
-  }
+  },
+  "github_ci": [
+    {
+      "name": "DPDK integration",
+      "id": 39747428989,
+      "head_sha": "0c94886f638813ca887e7c689fcf3a129c485a70",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428989"
+    },
+    {
+      "name": "DPDK extended software tests",
+      "id": 39747428901,
+      "head_sha": "0c94886f638813ca887e7c689fcf3a129c485a70",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428901"
+    },
+    {
+      "name": "Portable checks",
+      "id": 39747428864,
+      "head_sha": "0c94886f638813ca887e7c689fcf3a129c485a70",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428864"
+    }
+  ]
 }

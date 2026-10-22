@@ -33,11 +33,13 @@ jobs:
         run: |
           meson setup "$RUNNER_TEMP/dpdk-build" "$RUNNER_TEMP/dpdk" \
             -Dtests=true -Ddefault_library=static -Dplatform=generic \
-            '-Denable_drivers=bus/*,mempool/ring,net/null,net/ring,net/vhost,event/skeleton,event/dsw,crypto/openssl,crypto/ipsec_mb,crypto/scheduler' \
-            -Denable_apps=test
+            '-Denable_drivers=bus/*,mempool/ring,net/null,net/ring,net/vhost,net/virtio,event/skeleton,event/dsw,crypto/openssl,crypto/ipsec_mb,crypto/scheduler' \
+            -Denable_apps=test,test-pmd
           ninja -C "$RUNNER_TEMP/dpdk-build" -j 2
       - name: Scheduler, crypto, BPF ELF, dispatcher, pcapng and RX interrupts
         run: bash scripts/test-dpdk-extended.sh "$RUNNER_TEMP/dpdk-build"
+      - name: Testpmd NUMA pools and virtio queue-state API
+        run: python3 scripts/test-dpdk-cli.py "$RUNNER_TEMP/dpdk-build"
       - name: Retain test results and build diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -46,3 +48,4 @@ jobs:
           path: |
             ${{ runner.temp }}/dpdk-build/meson-logs/
             ${{ runner.temp }}/dpdk-build/cvm-dpdk-extended-tests/
+            ${{ runner.temp }}/dpdk-build/cvm-dpdk-cli-tests/

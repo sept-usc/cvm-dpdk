@@ -94,8 +94,12 @@ successful runs used an IPC-capable environment with PCI probing disabled.
 Apply all fourteen patches. The [test guide](../tests/dpdk/README.md) lists
 dependencies and drivers. The separate `DPDK extended software tests` workflow
 builds this profile; the original integration job retains its disabled-scheduler
-registration check. CI results for the new workflow will be recorded after
-the first push; the results here are local.
+registration check. Revision `0c94886f6388` passed
+[portable checks](https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428864),
+[DPDK integration](https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428989),
+and the new [extended software tests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39747428901).
+The detailed counts above describe the local build; CI's dependency versions
+and unsupported crypto subcases may differ.
 
 Local tests used GCC 15.2.0, generic static DPDK, Intel IPSec Multi-Buffer
 2.0.1, and four selected lcores for the maintained runner. Other workloads

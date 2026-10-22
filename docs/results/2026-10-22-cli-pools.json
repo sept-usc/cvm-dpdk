@@ -1,0 +1,273 @@
+{
+  "patch": "0015-testpmd-non-numa-forwarding-pool.patch",
+  "source_trees": {
+    "RESULT_TREE": "b0f716046d79ea645de74af7f966c52b4170dd75",
+    "RELEASE_RESULT_TREE": "7f67782d633d0cfae4b5416078b84b7e483a9b92"
+  },
+  "runner": {
+    "testpmd_sha256": "45000b71ea56b6d45dcd91ef9881ed0041ae99196ca27b3ab3825d34e53cddca",
+    "cpu_ids": [
+      24,
+      25,
+      26,
+      27
+    ],
+    "results": [
+      {
+        "name": "numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly"
+        ],
+        "tx_packets": 1023,
+        "exit_status": 0
+      },
+      {
+        "name": "no-numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly",
+          "--no-numa"
+        ],
+        "tx_packets": 1023,
+        "exit_status": 0
+      },
+      {
+        "name": "ethdev-vhost-backend",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_vhost0,iface=/tmp/cvm-ethdev-d7kylirv/vhost.sock,queues=2",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--no-numa",
+          "--rxq=2",
+          "--txq=2"
+        ],
+        "frontend_command": [
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+          "-l",
+          "26,27",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_virtio_user0,path=/tmp/cvm-ethdev-d7kylirv/vhost.sock,queues=2,queue_size=512"
+        ],
+        "frontend_sha256": "6a8a3dbecb9b3624196ebd801b8fe8733c703913a453a740afd8bfb2ee88bc92",
+        "frontend_exit_status": 0,
+        "exit_status": 0
+      }
+    ]
+  },
+  "before_patched": {
+    "testpmd_sha256": "c6adcd6be6039bcf47af30a863857c0103e1dff7bbc10367b51188bd4149c36c",
+    "cpu_ids": [
+      24,
+      25,
+      26,
+      27
+    ],
+    "results": [
+      {
+        "name": "numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/before-numa-build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly"
+        ],
+        "tx_packets": 1023,
+        "exit_status": 0
+      },
+      {
+        "name": "no-numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/before-numa-build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly",
+          "--no-numa"
+        ],
+        "exit_status": 1
+      }
+    ],
+    "error": "testpmd exited 1 before CLI prompt"
+  },
+  "before_pristine": {
+    "testpmd_sha256": "c98bbf7b03528dbc37a7e1c65bb467fd74a83b6a6716271cf26488df7e8caeb1",
+    "cpu_ids": [
+      24,
+      25,
+      26,
+      27
+    ],
+    "results": [
+      {
+        "name": "numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly"
+        ],
+        "tx_packets": 1023,
+        "exit_status": 0
+      },
+      {
+        "name": "no-numa-forwarding",
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly",
+          "--no-numa"
+        ],
+        "exit_status": 1
+      }
+    ],
+    "error": "testpmd exited 1 before nonzero transmitted packet count"
+  },
+  "initial_harness_stdout_timeout": {
+    "testpmd_sha256": "45000b71ea56b6d45dcd91ef9881ed0041ae99196ca27b3ab3825d34e53cddca",
+    "cpu_ids": [
+      24,
+      25,
+      26,
+      27
+    ],
+    "results": [
+      {
+        "name": "numa-forwarding",
+        "command": [
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-testpmd",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "512",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=net_ring0",
+          "--",
+          "-i",
+          "--total-num-mbufs=4096",
+          "--disable-link-check",
+          "--forward-mode=txonly"
+        ],
+        "exit_status": 0
+      }
+    ],
+    "error": "Timed out waiting for forwarding start"
+  },
+  "regressions": {
+    "production_checks": 48,
+    "exit_status": 0,
+    "asan_ubsan_exit_status": 0
+  },
+  "patch_application": {
+    "archived": 0,
+    "release": 0
+  },
+  "scope": [
+    "Ordinary memory, software ring/vhost/virtio devices; no physical NIC or SNP DMA",
+    "TX ring fills; positive TX count is a functional check, not a loss benchmark",
+    "Pristine SIGSEGV appears as exit 1 through stdbuf; full log records signal 11"
+  ]
+}
