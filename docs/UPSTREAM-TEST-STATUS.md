@@ -1,13 +1,13 @@
 # Upstream test status — 2026-10-22
 
-Of the 246 commands in the original audit, 208 now have a recorded pass in at
+Of the 246 commands in the original audit, 209 now have a recorded pass in at
 least one tested configuration. This includes 24 of the 25 originally reported
 host failures. The independent eight-core mempool command is still running.
-Another 37 commands still have no recorded pass; those 37 were originally skipped.
+Another 36 commands still have no recorded pass; those 36 were originally skipped.
 One timer test also retains an unexplained intermittent failure.
 
-These numbers reconcile evidence across dates, native software builds and the
-SNP guest's hugepage profile. They are **not a new full-suite run**, do not mean
+These numbers reconcile evidence across dates, native software builds, ARM64 emulation and
+the SNP guest's hugepage profile. They are **not a new full-suite run**, do not mean
 every configuration passes, and do not erase internal unsupported subcase skips.
 The [status JSON](results/2026-10-22-upstream-status.json) maps each resolved
 original failure to a passing record and lists every remaining command.
@@ -21,6 +21,7 @@ original failure to a passing record and lists every remaining command.
 | Optional software tests | Fourteen commands now pass with the necessary drivers, dependencies and memory, including scheduler, software crypto, BPF ELF, dispatcher, pcapng and the vhost RX interrupt control-path fixture. [Report](VALIDATION-2026-10-22-extended-tests.md) |
 | Ethdev API | A local vhost/virtio-user pair exercises the original two-queue state assertions. [Report](VALIDATION-2026-10-22-cli-pools.md) |
 | Mempool performance | Three original commands completed with eight enabled lcores, 6 GiB and a three-hour per-command outer ceiling; the independent eight-core rerun remains pending. Source and workload are unchanged; 2 GiB negative controls still fail. [Report](VALIDATION-2026-10-22-mempool.md) |
+| ARMv8 crypto | The original command passes 19 supported subcases under explicit ARM64 user emulation, retaining 906 skips. [Report](VALIDATION-2026-10-22-arm64-emulation.md) |
 | Timer repeatability | Six further runs pass 31/31 subcases. No timer code or deadline was changed; the earlier timing failure remains unexplained. [Report](VALIDATION-2026-10-22-timer-followup.md) |
 
 The maintained CI profiles now execute 39 distinct upstream commands, alongside
@@ -36,15 +37,15 @@ native and ASan/UBSan production regressions each passed all 48 checks.
 ## Remaining work and required environments
 
 The [hardware prerequisite record](results/2026-10-22-hardware-prerequisites.json)
-contains the local capability probe and availability checks. Excluding the one pending mempool command, the 37 remaining
-commands comprise 27 crypto commands, six hardware event-device self-tests,
+contains the local capability probe and availability checks. Excluding the one pending mempool command, the 36 remaining
+commands comprise 26 crypto commands, six hardware event-device self-tests,
 and four inline-security commands.
 
 | Remaining group | What is needed next |
 |---|---|
 | `cryptodev_mlx5_autotest` | A crypto-capable device/configuration. An explicit crypto-only probe of the available ConnectX-7 still returned 77: the PMD reported insufficient capabilities and skipped all 925 subcases. The message does not establish whether firmware, configuration or another prerequisite is responsible. |
 | `cryptodev_ccp_autotest` | A supported CCP device or separately validated driver support. The host exposes AMD `1022:14ca`; this release's CCP PMD lists `1456`, `1468` and `15df`, not `14ca`. Kernel binding was not changed. |
-| ARMv8, MVSAM and UADK crypto | Respectively an ARMv8 environment; a compatible Marvell EIP197 platform with MUSDK/modules; or supported UADK accelerator access. This x86 host has no UACCE class. The `sw` naming on MVSAM does not make it a generic software backend. |
+| MVSAM and UADK crypto | A compatible Marvell EIP197 platform with MUSDK/modules, or supported UADK accelerator access. This x86 host has no UACCE class. The `sw` naming on MVSAM does not make it a generic software backend. |
 | Four virtio/virtio-user crypto commands | A compatible virtio-crypto device/backend. This release's virtio-user crypto driver selects vhost-vDPA, and this host has no exposed vDPA bus or vhost-vDPA node. The passing network virtio fixture is insufficient. |
 | Other crypto commands | QAT, DPAA/DPAA2, CAAM JR, OCTEON/CN9K/CN10K, NITROX, BCMFS and ZSDA devices/platforms with their corresponding PMDs and test profiles, including raw API/asymmetric variants. |
 | Six `eventdev_selftest_*` commands | OCTEONTX, DPAA2, DLB2, CN9K, CN10K or CN20K event hardware and the matching PMD. |

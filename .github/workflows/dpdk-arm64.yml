@@ -1,0 +1,56 @@
+name: DPDK ARM64 emulation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  arm64:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cross compiler and user emulator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libc6-dev-arm64-cross qemu-user meson ninja-build pkg-config python3-pyelftools
+      - name: Build pinned ARM crypto library
+        run: |
+          git init "$RUNNER_TEMP/arm-crypto"
+          git -C "$RUNNER_TEMP/arm-crypto" remote add origin https://github.com/ARM-software/AArch64cryptolib.git
+          git -C "$RUNNER_TEMP/arm-crypto" fetch --depth 1 origin 9267aa1d46ae5ca68ff252d96733adb03b78794e
+          git -C "$RUNNER_TEMP/arm-crypto" checkout --detach FETCH_HEAD
+          make -C "$RUNNER_TEMP/arm-crypto" -j 2 CROSS=aarch64-linux-gnu- OPT=big libAArch64crypto.a libAArch64crypto.pc
+      - name: Verify release and apply the full patch series
+        run: |
+          curl --fail --location --retry 3 https://fast.dpdk.org/rel/dpdk-25.11.3.tar.xz -o "$RUNNER_TEMP/dpdk.tar.xz"
+          echo "$(cat patches/dpdk-25.11.3/RELEASE_SHA256)  $RUNNER_TEMP/dpdk.tar.xz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/dpdk"
+          tar -xf "$RUNNER_TEMP/dpdk.tar.xz" -C "$RUNNER_TEMP/dpdk" --strip-components=1
+          git -C "$RUNNER_TEMP/dpdk" init
+          git -C "$RUNNER_TEMP/dpdk" config user.name 'keke1022'
+          git -C "$RUNNER_TEMP/dpdk" config user.email 'keke83space@gmail.com'
+          git -C "$RUNNER_TEMP/dpdk" add -f .
+          git -C "$RUNNER_TEMP/dpdk" commit -m 'Import verified DPDK 25.11.3 release'
+          bash scripts/apply-dpdk-patches.sh "$RUNNER_TEMP/dpdk"
+      - name: Cross-compile DPDK and original crypto tests
+        run: |
+          export PKG_CONFIG_LIBDIR="$RUNNER_TEMP/arm-crypto/pkgconfig"
+          meson setup "$RUNNER_TEMP/dpdk-build" "$RUNNER_TEMP/dpdk" \
+            --cross-file tests/dpdk/arm64-cross.ini \
+            -Dtests=true -Ddefault_library=static -Dplatform=generic -Dmax_numa_nodes=1 \
+            '-Denable_drivers=bus/*,mempool/ring,crypto/armv8' -Denable_apps=test
+          ninja -C "$RUNNER_TEMP/dpdk-build" -j 2
+      - name: ARMv8 crypto under QEMU
+        run: python3 scripts/test-dpdk-arm64.py "$RUNNER_TEMP/dpdk-build"
+      - name: Retain emulation results and build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dpdk-arm64-emulation-logs
+          path: |
+            ${{ runner.temp }}/dpdk-build/meson-logs/
+            ${{ runner.temp }}/dpdk-build/cvm-dpdk-arm64-tests/

@@ -1,0 +1,97 @@
+{
+  "date_utc": "2026-10-22",
+  "dpdk_source_tree": "b0f716046d79ea645de74af7f966c52b4170dd75",
+  "crypto_library": {
+    "repository": "https://github.com/ARM-software/AArch64cryptolib",
+    "commit": "9267aa1d46ae5ca68ff252d96733adb03b78794e",
+    "pkgconfig_version": "23.03",
+    "optimization": "big",
+    "archive_sha256": "13437189ff6911910378db7c3d82578875e13ce3c7c78d09d3a8729b361cd609"
+  },
+  "compiler": "aarch64-linux-gnu-gcc-15 (Ubuntu 15.2.0-4ubuntu4) 15.2.0",
+  "cross_file": "[binaries]\nc = ['/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/bin/aarch64-linux-gnu-gcc-15', '--sysroot=/tmp/cvm-dpdk-followup-20261022/arm-deps']\nar = '/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/bin/aarch64-linux-gnu-ar'\nstrip = '/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/bin/aarch64-linux-gnu-strip'\npkg-config = 'pkg-config'\npcap-config = ''\nexe_wrapper = ['/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/bin/qemu-aarch64', '-cpu', 'max', '-L', '/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/aarch64-linux-gnu']\n\n[host_machine]\nsystem = 'linux'\ncpu_family = 'aarch64'\ncpu = 'armv8-a'\nendian = 'little'\n\n[properties]\nplatform = 'generic'\nneeds_exe_wrapper = true\n",
+  "meson_options": [
+    "tests=true",
+    "default_library=static",
+    "platform=generic",
+    "max_numa_nodes=1",
+    "enable_drivers=bus/*,mempool/ring,crypto/armv8",
+    "enable_apps=test"
+  ],
+  "runner": {
+    "scope": "ARM64 instruction emulation on the host; not native ARM hardware or performance qualification",
+    "binary_sha256": "1c20373c032a7d8b35f87052a5703f262c22d11968752ed1598d585c16afb151",
+    "qemu_sha256": "29ae89cdabc50ed749038d2e5242f4e82a60b560a81217f31f531a45554e2256",
+    "qemu_version": "qemu-aarch64 version 10.1.0 (Debian 1:10.1.0+ds-5ubuntu2.7)",
+    "cpu_ids": [
+      24,
+      25
+    ],
+    "memory_mib": 2048,
+    "timeout_seconds": 600,
+    "log_sha256": "40839521ca3ac8a8783957ce3df429e305e38a21d336be287d4613363350989f",
+    "results": [
+      {
+        "name": "cryptodev_sw_armv8_autotest",
+        "command": [
+          "/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/bin/qemu-aarch64",
+          "-cpu",
+          "max",
+          "-L",
+          "/tmp/cvm-dpdk-followup-20261022/arm-deps/usr/aarch64-linux-gnu",
+          "/tmp/cvm-dpdk-followup-20261022/arm-build/app/dpdk-test",
+          "-l",
+          "24,25",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry",
+          "--vdev=crypto_armv8"
+        ],
+        "exit_status": 0,
+        "duration_seconds": 0.666,
+        "timed_out": false,
+        "subcases": {
+          "total": 925,
+          "skipped": 906,
+          "executed": 19,
+          "unsupported": 0,
+          "passed": 19,
+          "failed": 0
+        }
+      }
+    ]
+  },
+  "passed_subcases": [
+    "AES-128-CBC HMAC-SHA1 Encryption Digest",
+    "AES-128-CBC HMAC-SHA1 Encryption Digest (short buffers)",
+    "AES-128-CBC HMAC-SHA1 Decryption Digest Verify",
+    "AES-128-CBC HMAC-SHA1 Decryption Digest Verify (short buffers)",
+    "AES-128-CBC HMAC-SHA256 Encryption Digest",
+    "AES-128-CBC HMAC-SHA256 Encryption Digest (short buffers)",
+    "AES-128-CBC HMAC-SHA256 Decryption Digest Verify",
+    "AES-128-CBC HMAC-SHA256 Decryption Digest Verify (short buffers)",
+    "AES-128-CBC HMAC-SHA1 Encryption Digest Sessionless",
+    "AES-128-CBC HMAC-SHA1 Decryption Digest Verify Sessionless",
+    "auth_encrypt_AES128CBC_HMAC_SHA1_esn_check",
+    "auth_decrypt_AES128CBC_HMAC_SHA1_esn_check",
+    "auth_decryption_AES128CBC_HMAC_SHA1_fail_data_corrupt",
+    "auth_decryption_AES128CBC_HMAC_SHA1_fail_tag_corrupt",
+    "test_device_reconfigure",
+    "test_device_configure_invalid_dev_id",
+    "test_queue_pair_descriptor_setup",
+    "test_device_configure_invalid_queue_pair_ids",
+    "test_stats"
+  ],
+  "initial_direct_run": {
+    "exit_status": 0,
+    "log_sha256": "40839521ca3ac8a8783957ce3df429e305e38a21d336be287d4613363350989f",
+    "counts": {
+      "passed": 19,
+      "skipped": 906,
+      "failed": 0
+    }
+  }
+}

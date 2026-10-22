@@ -43,5 +43,9 @@
   "mvsam": {
     "source_reference": "DPDK 25.11.3 doc/guides/cryptodevs/mvsam.rst",
     "requirement": "MUSDK with EIP197 support, compatible Marvell platform and driver modules; not a generic software crypto backend"
+  },
+  "armv8_crypto": {
+    "native_host": "x86_64; not ARMv8 hardware",
+    "emulated_functional_pass": "2026-10-22-arm64-emulation.json"
   }
 }

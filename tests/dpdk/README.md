@@ -112,6 +112,10 @@ performance measurement.
 See the [long-profile evidence](../../docs/VALIDATION-2026-10-22-mempool.md)
 for completed commands, negative memory controls and retained incomplete runs.
 
+For the ARMv8 crypto command on an x86 host, use the separate
+[ARM64 cross-build and QEMU profile](../../docs/VALIDATION-2026-10-22-arm64-emulation.md).
+Its functional result is recorded as emulation, not native ARM qualification.
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh
