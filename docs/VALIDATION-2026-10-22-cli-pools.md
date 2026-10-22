@@ -63,6 +63,13 @@ The fifteen-patch series was reapplied from both recorded clean baselines
 and its resulting trees match the manifests. The extended CI workflow now
 builds testpmd and virtio and runs the same CLI regression.
 
+Revision `1f5647fcbe` passed
+[portable checks](https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730373),
+[DPDK integration](https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730139),
+and [extended software/CLI tests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730222).
+Together the two DPDK jobs cover 39 distinct original upstream commands,
+in addition to the CVM-DPDK regressions and two testpmd forwarding checks.
+
 This is software validation. It adds no hardware DMA, SNP shared-allocation,
 private-bridge traffic or physical interrupt measurement. The existing bridge
 tests separately exercise private-pool resolution and forwarding ownership.

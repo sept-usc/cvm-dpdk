@@ -269,5 +269,28 @@
     "Ordinary memory, software ring/vhost/virtio devices; no physical NIC or SNP DMA",
     "TX ring fills; positive TX count is a functional check, not a loss benchmark",
     "Pristine SIGSEGV appears as exit 1 through stdbuf; full log records signal 11"
+  ],
+  "github_ci": [
+    {
+      "name": "Portable checks",
+      "id": 39748730373,
+      "head_sha": "1f5647fcbe1b14b352f38f28a4c7e4d501a9d4c4",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730373"
+    },
+    {
+      "name": "DPDK extended software tests",
+      "id": 39748730222,
+      "head_sha": "1f5647fcbe1b14b352f38f28a4c7e4d501a9d4c4",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730222"
+    },
+    {
+      "name": "DPDK integration",
+      "id": 39748730139,
+      "head_sha": "1f5647fcbe1b14b352f38f28a4c7e4d501a9d4c4",
+      "conclusion": "success",
+      "html_url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39748730139"
+    }
   ]
 }

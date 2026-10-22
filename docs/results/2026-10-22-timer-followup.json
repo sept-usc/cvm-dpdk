@@ -1,0 +1,325 @@
+{
+  "initial_runs": {
+    "binary": "/tmp/snpflow-native-software-build/app/dpdk-test",
+    "sha256": "ead357be35f52409af4782b216cdc9259a191b071cf4c194234131b24e691714",
+    "results": [
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656641.2468333,
+        "duration_seconds": 225.195,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 1,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656866.4423115,
+        "duration_seconds": 225.196,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 2,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792657091.6383677,
+        "duration_seconds": 225.2,
+        "exit_status": 0,
+        "timed_out": false
+      }
+    ]
+  },
+  "direct_runs": {
+    "binary": "/tmp/snpflow-native-software-build/app/dpdk-test",
+    "sha256": "ead357be35f52409af4782b216cdc9259a191b071cf4c194234131b24e691714",
+    "results": [
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 0,
+        "command": [
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792658325.1148279,
+        "duration_seconds": 225.371,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 1,
+        "command": [
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792658550.486765,
+        "duration_seconds": 225.403,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "event_timer_adapter_test",
+        "iteration": 2,
+        "command": [
+          "/tmp/snpflow-native-software-build/app/dpdk-test",
+          "-l",
+          "16-23",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792658775.8897085,
+        "duration_seconds": 225.407,
+        "exit_status": 0,
+        "timed_out": false
+      }
+    ]
+  },
+  "scheduling_samples": [
+    {
+      "iteration": 0,
+      "sample_count": 225,
+      "maximum_sample_interval_seconds": 1.0021091802045703,
+      "threads": [
+        {
+          "name": "dpdk-test",
+          "runtime_seconds": 224.198923,
+          "runqueue_wait_seconds": 0.071044,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.000667
+        },
+        {
+          "name": "dpdk-intr",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker17",
+          "runtime_seconds": 0.003635,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker18",
+          "runtime_seconds": 0.00506,
+          "runqueue_wait_seconds": 0.000284,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.000284
+        },
+        {
+          "name": "dpdk-worker19",
+          "runtime_seconds": 0.003029,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker20",
+          "runtime_seconds": 223.367719,
+          "runqueue_wait_seconds": 0.001463,
+          "maximum_sampled_runqueue_wait_delta_seconds": 8.4e-05
+        },
+        {
+          "name": "dpdk-worker21",
+          "runtime_seconds": 223.368119,
+          "runqueue_wait_seconds": 0.00214,
+          "maximum_sampled_runqueue_wait_delta_seconds": 8.2e-05
+        },
+        {
+          "name": "dpdk-worker22",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker23",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        }
+      ]
+    },
+    {
+      "iteration": 1,
+      "sample_count": 225,
+      "maximum_sample_interval_seconds": 1.0023396536707878,
+      "threads": [
+        {
+          "name": "dpdk-test",
+          "runtime_seconds": 223.868393,
+          "runqueue_wait_seconds": 0.431792,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.035804
+        },
+        {
+          "name": "dpdk-intr",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker17",
+          "runtime_seconds": 0.00374,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker18",
+          "runtime_seconds": 0.005078,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker19",
+          "runtime_seconds": 0.002762,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker20",
+          "runtime_seconds": 223.390043,
+          "runqueue_wait_seconds": 0.001882,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.000292
+        },
+        {
+          "name": "dpdk-worker21",
+          "runtime_seconds": 223.391114,
+          "runqueue_wait_seconds": 0.00081,
+          "maximum_sampled_runqueue_wait_delta_seconds": 5.8e-05
+        },
+        {
+          "name": "dpdk-worker22",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker23",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "sample_count": 225,
+      "maximum_sample_interval_seconds": 1.0024687089025974,
+      "threads": [
+        {
+          "name": "dpdk-test",
+          "runtime_seconds": 224.270857,
+          "runqueue_wait_seconds": 0.03306,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.000493
+        },
+        {
+          "name": "dpdk-intr",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker17",
+          "runtime_seconds": 0.003701,
+          "runqueue_wait_seconds": 4.9e-05,
+          "maximum_sampled_runqueue_wait_delta_seconds": 4.9e-05
+        },
+        {
+          "name": "dpdk-worker18",
+          "runtime_seconds": 0.005155,
+          "runqueue_wait_seconds": 4.9e-05,
+          "maximum_sampled_runqueue_wait_delta_seconds": 4.4e-05
+        },
+        {
+          "name": "dpdk-worker19",
+          "runtime_seconds": 0.00256,
+          "runqueue_wait_seconds": 8.5e-05,
+          "maximum_sampled_runqueue_wait_delta_seconds": 8.5e-05
+        },
+        {
+          "name": "dpdk-worker20",
+          "runtime_seconds": 223.401866,
+          "runqueue_wait_seconds": 0.003047,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.000119
+        },
+        {
+          "name": "dpdk-worker21",
+          "runtime_seconds": 223.404106,
+          "runqueue_wait_seconds": 0.000827,
+          "maximum_sampled_runqueue_wait_delta_seconds": 8.5e-05
+        },
+        {
+          "name": "dpdk-worker22",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        },
+        {
+          "name": "dpdk-worker23",
+          "runtime_seconds": 0.0,
+          "runqueue_wait_seconds": 0.0,
+          "maximum_sampled_runqueue_wait_delta_seconds": 0.0
+        }
+      ]
+    }
+  ],
+  "scope": [
+    "Six top-level passes with 31/31 cases in each run; initial historical failure remains unexplained",
+    "Initial collector sampled stdbuf wrapper only and cannot support scheduling conclusions",
+    "Direct runs sample actual DPDK threads at approximately 1 Hz; this is not an event-queue or kernel scheduler trace",
+    "No timer assertions, deadlines, or implementation changed"
+  ]
+}

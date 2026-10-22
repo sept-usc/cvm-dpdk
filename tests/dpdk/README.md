@@ -90,6 +90,25 @@ groups. Logs and JSON results go under `cvm-dpdk-cli-tests/`; use `--output`
 to select a fresh directory for a rerun. See the
 [CLI validation](../../docs/VALIDATION-2026-10-22-cli-pools.md).
 
+The four upstream mempool performance commands need a separate long profile:
+
+```sh
+python3 scripts/test-dpdk-mempool.py /path/to/dpdk/build
+```
+
+This selects eight allowed CPUs, allocates 6 GiB ordinary EAL memory, and runs
+all four commands sequentially with a three-hour ceiling per command. Allow
+additional process/OS memory and potentially several hours for the complete
+invocation. The original one-second cases and iteration batches are unchanged;
+the usual 600-second perf-suite timeout is shorter than even one command's
+minimum case duration. Use `--cpus` with eight comma-separated CPU IDs to avoid
+contended cores, and repeat `--test` to select particular commands. JSON results
+and line-buffered logs go into a fresh `cvm-dpdk-mempool-tests/` directory;
+`--output` selects another directory. Existing evidence is never overwritten.
+Errors, skips and timeouts fail the runner. This profile is intentionally
+outside the short CI jobs; benchmark timing on shared CPUs is not a controlled
+performance measurement.
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh

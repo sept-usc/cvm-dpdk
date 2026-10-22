@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import tempfile
 import time
@@ -28,7 +29,7 @@ def stop(process):
         try:
             process.communicate("quit\n", timeout=15)
         except (subprocess.TimeoutExpired, BrokenPipeError):
-            process.kill()
+            os.killpg(process.pid, signal.SIGKILL)
             process.wait()
 
 
@@ -67,7 +68,8 @@ def main():
         result = {"name": name, "command": command}
         with log_path.open("w") as log:
             process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=log,
-                                       stderr=subprocess.STDOUT, env=environment, text=True)
+                                       stderr=subprocess.STDOUT, env=environment, text=True,
+                                       start_new_session=True)
             try:
                 wait_for(process, lambda: "testpmd>" in log_path.read_text(), "CLI prompt")
                 exercise(process, log_path, result)
