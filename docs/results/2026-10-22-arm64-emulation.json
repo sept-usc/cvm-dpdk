@@ -93,5 +93,11 @@
       "skipped": 906,
       "failed": 0
     }
+  },
+  "github_ci": {
+    "head_sha": "ab0775d3",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39757325293"
   }
 }

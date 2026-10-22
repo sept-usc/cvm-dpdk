@@ -1,0 +1,58 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "24-27",
+    "qemu-system-x86_64",
+    "-machine",
+    "pc",
+    "-accel",
+    "tcg,thread=multi",
+    "-cpu",
+    "max",
+    "-smp",
+    "2",
+    "-m",
+    "3072",
+    "-nodefaults",
+    "-display",
+    "none",
+    "-serial",
+    "stdio",
+    "-monitor",
+    "none",
+    "-nic",
+    "none",
+    "-no-reboot",
+    "-kernel",
+    "/tmp/cvm-dpdk-followup-20261022/virtio-kernel/boot/vmlinuz-6.17.0-41-generic",
+    "-initrd",
+    "/tmp/cvm-dpdk-followup-20261022/virtio-initramfs.cpio.gz",
+    "-append",
+    "console=ttyS0 rdinit=/init hugepagesz=2M hugepages=1024 panic=-1 random.trust_cpu=on",
+    "-object",
+    "cryptodev-backend-builtin,id=crypto0,queues=1",
+    "-device",
+    "virtio-crypto-pci,cryptodev=crypto0,addr=0x4"
+  ],
+  "initramfs_sha256": "61f32960085a644a8d91c27b6f47c802c8796ac968c7b527d3c86b83ba0d4060",
+  "qemu_exit_status": 0,
+  "duration_seconds": 41.185,
+  "log_sha256": "0edcef33598ab555997823032cdda5d32f101d8c5131acec0e919bbd297277d5",
+  "guest_finished": true,
+  "results": [
+    {
+      "name": "cryptodev_virtio_autotest",
+      "exit_status": 139
+    },
+    {
+      "name": "cryptodev_virtio_asym_autotest",
+      "exit_status": 139
+    }
+  ],
+  "scope": "Initial isolated QEMU TCG guest probe; both commands crash after failed PCI probe. Investigation pending.",
+  "binary_sha256": "60dc33c51179d1c8182749c698ceecdf267775c94ab2df7e357d68aa497b76aa",
+  "source_tree": "b0f716046d79ea645de74af7f966c52b4170dd75",
+  "crash_symbol": "rte_cryptodev_devices_get",
+  "source_observation": "crypto_virtio_create leaves the allocated cryptodev attached when crypto_virtio_dev_init fails; device enumeration then dereferences device->driver->name after PCI probe cleanup clears device->driver"
+}

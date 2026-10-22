@@ -54,3 +54,6 @@ pass/skip/fail counts. The [machine-readable record](results/2026-10-22-arm64-em
 contains the maintained command, tool and binary hashes, source revision,
 subcase names and build configuration. Raw logs and build products remain in
 `/tmp/cvm-dpdk-followup-20261022`.
+
+Revision `ab0775d` also passed the separate
+[ARM64 emulation CI job](https://github.com/sept-usc/cvm-dpdk/actions/runs/39757325293).

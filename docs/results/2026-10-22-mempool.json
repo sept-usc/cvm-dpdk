@@ -8,6 +8,20 @@
   "test_source_identical_to_official_release": true,
   "memory_mib": 6144,
   "timeout_seconds_per_command": 10800,
+  "pool_allocation": {
+    "objects_per_pool": 270335,
+    "payload_bytes_per_object": 2048,
+    "total_object_bytes_including_headers": 2112,
+    "page_size_bytes": 4096,
+    "objects_per_page": 1,
+    "pool_chunk_bytes": [
+      1107292288,
+      1107292288,
+      1107292288,
+      1107292288
+    ],
+    "source_reference": "lib/mempool/rte_mempool_ops_default.c: rte_mempool_op_calc_mem_size_helper and rte_mempool_op_populate_helper"
+  },
   "environment": {
     "selector": "DPDK_TEST=<result name>",
     "unset": [
@@ -125,6 +139,41 @@
       "log_sha256": "c75551b0dfb60f1a2aa54e4b604a90aa65c00265db758fd1e0f22e32867d9c30",
       "completed_combinations": 1140,
       "final_test_message": "Test OK"
+    },
+    {
+      "name": "mempool_perf_autotest_allcores",
+      "command": [
+        "timeout",
+        "--kill-after=10s",
+        "10800",
+        "stdbuf",
+        "-oL",
+        "/tmp/snpflow-native-software-build/app/dpdk-test",
+        "-l",
+        "16,17,18,19,20,21,22,23",
+        "--no-huge",
+        "-m",
+        "6144",
+        "--no-pci",
+        "--no-shconf",
+        "--no-telemetry"
+      ],
+      "exit_status": 0,
+      "duration_seconds": 2509.87,
+      "cpu_ids": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "log_path": "/tmp/cvm-dpdk-followup-20261022/mempool-allcores-rerun/mempool_perf_autotest_allcores.log",
+      "log_sha256": "222e930c277da77b60afd1e25afc2612ff8880153d83183604b9d66df91dd5e1",
+      "completed_combinations": 1140,
+      "final_test_message": "Test OK"
     }
   ],
   "negative_memory_controls": {
@@ -148,7 +197,10 @@
         "started_unix": 1792658639.210273,
         "duration_seconds": 3.002,
         "exit_status": 255,
-        "timed_out": false
+        "timed_out": false,
+        "diagnostic": "cannot allocate mempool (with cache)",
+        "log_path": "/tmp/cvm-dpdk-followup-20261022/mempool-memory-control/mempool_perf_autotest-0.log",
+        "log_sha256": "9abac2cfdc6bf3e0ecc023a280035df7bdec9beb4a34351c2eefcd8963754eec"
       },
       {
         "name": "mempool_perf_autotest_1core",
@@ -167,7 +219,10 @@
         "started_unix": 1792658642.2123218,
         "duration_seconds": 3.002,
         "exit_status": 255,
-        "timed_out": false
+        "timed_out": false,
+        "diagnostic": "cannot allocate mempool (with cache)",
+        "log_path": "/tmp/cvm-dpdk-followup-20261022/mempool-memory-control/mempool_perf_autotest_1core-0.log",
+        "log_sha256": "4d0e8d941393165a89a0aa6553c1c0a35184ac913902a38c0db901f75eaf9e13"
       },
       {
         "name": "mempool_perf_autotest_2cores",
@@ -186,7 +241,10 @@
         "started_unix": 1792658645.214487,
         "duration_seconds": 3.002,
         "exit_status": 255,
-        "timed_out": false
+        "timed_out": false,
+        "diagnostic": "cannot allocate mempool (with cache)",
+        "log_path": "/tmp/cvm-dpdk-followup-20261022/mempool-memory-control/mempool_perf_autotest_2cores-0.log",
+        "log_sha256": "b23bcd091b27a599e684bccf33967059eb033baf5b32917655b59cb37068d0b1"
       },
       {
         "name": "mempool_perf_autotest_allcores",
@@ -205,7 +263,10 @@
         "started_unix": 1792658648.216608,
         "duration_seconds": 3.002,
         "exit_status": 255,
-        "timed_out": false
+        "timed_out": false,
+        "diagnostic": "cannot allocate mempool (with cache)",
+        "log_path": "/tmp/cvm-dpdk-followup-20261022/mempool-memory-control/mempool_perf_autotest_allcores-0.log",
+        "log_sha256": "e1fa6d33029f6e1cf8406f3fbee7b39508f68dee84417eba5df7b7b02f4cbf6f"
       }
     ]
   },
@@ -281,21 +342,5 @@
     "Shared host; selected CPUs were not exclusively reserved",
     "Throughput and elapsed times are not controlled performance comparisons",
     "The aggregate command was launched before the maintained runner; its duration is not recorded"
-  ],
-  "pending": [
-    {
-      "name": "mempool_perf_autotest_allcores",
-      "status": "full_rerun_in_progress_not_a_pass",
-      "cpu_ids": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
-      ]
-    }
   ]
 }
