@@ -2,6 +2,8 @@
 
 Start with the [project README](../README.md) for the current scope and result
 summary, and [REPRODUCING.md](REPRODUCING.md) for build and test commands.
+The [upstream status ledger](UPSTREAM-TEST-STATUS.md) reconciles the original
+audit with later fixes, passing configurations and remaining prerequisites.
 Dated reports describe the configuration tested on that date; later work can
 supersede their open questions.
 
@@ -28,6 +30,7 @@ before the rename for traceability; current commands are in the guides above.
 | [2026-10-22 extended upstream tests](VALIDATION-2026-10-22-extended-tests.md) | Scheduler and software crypto, BPF ELF, dispatcher, pcapng, vhost interrupt queues, and IPsec performance fixture repair |
 | [2026-10-22 forwarding pools and ethdev API](VALIDATION-2026-10-22-cli-pools.md) | Non-NUMA startup/forwarding fix, negative controls, and virtio queue-state checks |
 | [2026-10-22 timer repeatability](VALIDATION-2026-10-22-timer-followup.md) | Six further 31/31 passes, corrected thread sampling, and unresolved failure attribution |
+| [2026-10-22 mempool long profile](VALIDATION-2026-10-22-mempool.md) | Unmodified benchmark results, memory controls, and retained incomplete attempts |
 | [Kernel issues and history](../kmod/ISSUES.md) | Allocation and lifetime behavior, design constraints, known gaps |
 
 ## Runnable experiments

@@ -109,6 +109,9 @@ Errors, skips and timeouts fail the runner. This profile is intentionally
 outside the short CI jobs; benchmark timing on shared CPUs is not a controlled
 performance measurement.
 
+See the [long-profile evidence](../../docs/VALIDATION-2026-10-22-mempool.md)
+for completed commands, negative memory controls and retained incomplete runs.
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh

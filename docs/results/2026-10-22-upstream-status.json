@@ -1,0 +1,478 @@
+{
+  "basis": "Cross-configuration reconciliation of recorded evidence, NOT a new full-suite run or a claim that each configuration passes",
+  "counts": {
+    "original_entries": 246,
+    "entries_with_recorded_pass": 208,
+    "entries_without_recorded_pass": 38,
+    "original_failures_with_recorded_pass": 24
+  },
+  "resolved_original_failures": [
+    {
+      "name": "cryptodev_scheduler_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-22-extended-tests.json",
+        "location": "runner/results/0"
+      }
+    },
+    {
+      "name": "event_dma_adapter_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/8"
+      }
+    },
+    {
+      "name": "event_crypto_adapter_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/7"
+      }
+    },
+    {
+      "name": "event_eth_rx_adapter_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/10"
+      }
+    },
+    {
+      "name": "event_eth_rx_intr_adapter_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-22-extended-tests.json",
+        "location": "runner/results/13"
+      }
+    },
+    {
+      "name": "event_timer_adapter_test",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "software_profile_results/8"
+      }
+    },
+    {
+      "name": "external_mem_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/44"
+      }
+    },
+    {
+      "name": "timer_secondary_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/45"
+      }
+    },
+    {
+      "name": "efd_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/0"
+      }
+    },
+    {
+      "name": "efd_perf_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/1"
+      }
+    },
+    {
+      "name": "mempool_perf_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-22-mempool.json",
+        "location": "results/0"
+      }
+    },
+    {
+      "name": "mempool_perf_autotest_1core",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-22-mempool.json",
+        "location": "results/1"
+      }
+    },
+    {
+      "name": "mempool_perf_autotest_2cores",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-22-mempool.json",
+        "location": "results/2"
+      }
+    },
+    {
+      "name": "pmd_perf_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/11"
+      }
+    },
+    {
+      "name": "eal_flags_a_opt_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/16"
+      }
+    },
+    {
+      "name": "eal_flags_b_opt_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/17"
+      }
+    },
+    {
+      "name": "eal_flags_c_opt_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/18"
+      }
+    },
+    {
+      "name": "eal_flags_file_prefix_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/19"
+      }
+    },
+    {
+      "name": "eal_flags_hpet_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/20"
+      }
+    },
+    {
+      "name": "eal_flags_mem_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/22"
+      }
+    },
+    {
+      "name": "eal_flags_misc_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/23"
+      }
+    },
+    {
+      "name": "eal_flags_r_opt_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/26"
+      }
+    },
+    {
+      "name": "event_eth_tx_adapter_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-software-rx-pmd.json",
+        "location": "functional_runner/results/9"
+      }
+    },
+    {
+      "name": "memzone_autotest",
+      "original_result": "FAIL",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "guest_huge_results/37"
+      }
+    }
+  ],
+  "remaining_without_pass": [
+    {
+      "name": "cryptodev_cn10k_raw_api_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_dpaa2_sec_raw_api_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_dpaa_sec_raw_api_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_qat_raw_api_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_qat_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_mlx5_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The selected ConnectX-7 did not expose the crypto capabilities required by the PMD; the targeted probe still returned 77"
+    },
+    {
+      "name": "cryptodev_sw_armv8_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "An ARMv8 environment; the current host is x86_64"
+    },
+    {
+      "name": "cryptodev_sw_mvsam_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A compatible Marvell EIP197 platform, MUSDK with SAM support and its kernel modules"
+    },
+    {
+      "name": "cryptodev_dpaa2_sec_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_dpaa_sec_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_ccp_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "Host Genoa CCP PCI ID 1022:14ca is outside the upstream CCP PMD device list; kernel driver binding was not changed"
+    },
+    {
+      "name": "cryptodev_uadk_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "UADK libraries and a supported accelerator; no UACCE class is exposed on this host"
+    },
+    {
+      "name": "cryptodev_virtio_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A configured virtio-crypto device and compatible backend"
+    },
+    {
+      "name": "cryptodev_virtio_user_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A configured crypto vhost-vDPA backend supported by the virtio-user crypto PMD; the network virtio pair does not provide a crypto device"
+    },
+    {
+      "name": "cryptodev_octeontx_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_caam_jr_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_nitrox_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_bcmfs_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_cn9k_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_cn10k_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_zsda_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_qat_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_octeontx_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_cn9k_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_cn10k_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A separately provisioned device/platform and its PMD test profile"
+    },
+    {
+      "name": "cryptodev_virtio_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A configured virtio-crypto device and compatible backend"
+    },
+    {
+      "name": "cryptodev_virtio_user_asym_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A configured crypto vhost-vDPA backend supported by the virtio-user crypto PMD; the network virtio pair does not provide a crypto device"
+    },
+    {
+      "name": "eventdev_selftest_octeontx",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "eventdev_selftest_dpaa2",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "eventdev_selftest_dlb2",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "eventdev_selftest_cn9k",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "eventdev_selftest_cn10k",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "eventdev_selftest_cn20k",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "The corresponding hardware event device and PMD"
+    },
+    {
+      "name": "inline_macsec_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A qualified inline security offload port and its test-specific configuration"
+    },
+    {
+      "name": "inline_ipsec_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A qualified inline security offload port and its test-specific configuration"
+    },
+    {
+      "name": "inline_ipsec_sg_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A qualified inline security offload port and its test-specific configuration"
+    },
+    {
+      "name": "event_inline_ipsec_autotest",
+      "original_result": "SKIP",
+      "status": "no_recorded_pass",
+      "prerequisite": "A qualified inline security offload port and its test-specific configuration"
+    },
+    {
+      "name": "mempool_perf_autotest_allcores",
+      "original_result": "FAIL",
+      "status": "no_recorded_pass",
+      "prerequisite": "Full unchanged long-profile command still running; see mempool evidence record"
+    }
+  ],
+  "additional_passes_outside_original_inventory": [
+    {
+      "name": "link_bonding_autotest",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "software_profile_results/17"
+      }
+    },
+    {
+      "name": "link_bonding_mode4_autotest",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "software_profile_results/18"
+      }
+    },
+    {
+      "name": "link_bonding_rssconf_autotest",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "software_profile_results/19"
+      }
+    },
+    {
+      "name": "pcapng_autotest",
+      "pass_evidence": {
+        "record": "2026-10-22-extended-tests.json",
+        "location": "runner/results/3"
+      }
+    },
+    {
+      "name": "rawdev_autotest",
+      "pass_evidence": {
+        "record": "2026-10-21-upstream-tests.json",
+        "location": "software_profile_results/16"
+      }
+    }
+  ],
+  "unresolved_flakiness": [
+    {
+      "name": "event_timer_adapter_test",
+      "record": "2026-10-22-timer-followup.json",
+      "status": "Six further passes; original failure cause remains unexplained"
+    }
+  ],
+  "hardware_probe_record": "2026-10-22-hardware-prerequisites.json"
+}

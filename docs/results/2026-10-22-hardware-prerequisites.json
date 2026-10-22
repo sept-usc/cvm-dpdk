@@ -1,0 +1,47 @@
+{
+  "mlx5_crypto": {
+    "command": [
+      "/tmp/cvm-dpdk-followup-20261022/mlx5-crypto-build/app/dpdk-test",
+      "-l",
+      "24-25",
+      "--no-huge",
+      "-m",
+      "1024",
+      "--no-shconf",
+      "--no-telemetry",
+      "--allow=0000:21:00.1,class=crypto,algo=1"
+    ],
+    "test": "cryptodev_mlx5_autotest",
+    "binary_sha256": "8b729b3e4823e972949a7e2e07980c66e2446d9c19d3dadc951948d5224c3739",
+    "exit_status": 77,
+    "duration_seconds": 0.253
+  },
+  "mlx5_diagnostic": "Not enough capabilities to support crypto operations; no crypto device was created; all 925 subcases skipped",
+  "crypto_ccp": {
+    "host_device_ids": [
+      "1022:14ca"
+    ],
+    "dpdk_25_11_3_supported_device_ids": [
+      "1022:1456",
+      "1022:1468",
+      "1022:15df"
+    ],
+    "kernel_driver": "ccp",
+    "driver_binding_changed": false
+  },
+  "host_architecture": "x86_64",
+  "scope": "Capability/availability evidence, not hardware functional qualification. No firmware, key provisioning, or kernel driver binding changed.",
+  "uadk": {
+    "uacce_class_present": false,
+    "source_reference": "DPDK 25.11.3 doc/guides/cryptodevs/uadk.rst; requires UADK accelerator access"
+  },
+  "virtio_user_crypto": {
+    "vdpa_bus_present": false,
+    "vhost_vdpa_nodes": [],
+    "source_reference": "DPDK 25.11.3 drivers/crypto/virtio/virtio_user/virtio_user_dev.c; crypto_virtio_user_dev_init selects VHOST_VDPA"
+  },
+  "mvsam": {
+    "source_reference": "DPDK 25.11.3 doc/guides/cryptodevs/mvsam.rst",
+    "requirement": "MUSDK with EIP197 support, compatible Marvell platform and driver modules; not a generic software crypto backend"
+  }
+}
