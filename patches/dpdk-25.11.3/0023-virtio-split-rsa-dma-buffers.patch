@@ -1,0 +1,191 @@
+From 0b247cea7d442e6d372778373ec5323b698d1a4f Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 04:23:24 -0700
+Subject: [PATCH] crypto/virtio: stage split-ring RSA buffers in DMA-visible
+ cookies
+
+---
+ drivers/crypto/virtio/virtio_cryptodev.h |   7 +-
+ drivers/crypto/virtio/virtio_rxtx.c      | 125 +++++++++++++++--------
+ 2 files changed, 85 insertions(+), 47 deletions(-)
+
+diff --git a/drivers/crypto/virtio/virtio_cryptodev.h b/drivers/crypto/virtio/virtio_cryptodev.h
+index 075b5ff..8df446f 100644
+--- a/drivers/crypto/virtio/virtio_cryptodev.h
++++ b/drivers/crypto/virtio/virtio_cryptodev.h
+@@ -22,9 +22,10 @@
+ #define NUM_ENTRY_VIRTIO_CRYPTO_OP 7
+ 
+ #define VIRTIO_CRYPTO_MAX_IV_SIZE 16
+-#define VIRTIO_CRYPTO_MAX_MSG_SIZE 512
+-#define VIRTIO_CRYPTO_MAX_SIGN_SIZE 1024
+-#define VIRTIO_CRYPTO_MAX_CIPHER_SIZE 1024
++#define VIRTIO_CRYPTO_MAX_RSA_SIZE 1024
++#define VIRTIO_CRYPTO_MAX_MSG_SIZE VIRTIO_CRYPTO_MAX_RSA_SIZE
++#define VIRTIO_CRYPTO_MAX_SIGN_SIZE VIRTIO_CRYPTO_MAX_RSA_SIZE
++#define VIRTIO_CRYPTO_MAX_CIPHER_SIZE VIRTIO_CRYPTO_MAX_RSA_SIZE
+ 
+ #define VIRTIO_CRYPTO_MAX_KEY_SIZE 256
+ 
+diff --git a/drivers/crypto/virtio/virtio_rxtx.c b/drivers/crypto/virtio/virtio_rxtx.c
+index 4204e1f..3595f93 100644
+--- a/drivers/crypto/virtio/virtio_rxtx.c
++++ b/drivers/crypto/virtio/virtio_rxtx.c
+@@ -97,6 +97,28 @@ virtqueue_dequeue_burst_rx(struct virtqueue *vq,
+ 
+ 		vq->packets_received_total++;
+ 
++		if (cop->type == RTE_CRYPTO_OP_TYPE_ASYMMETRIC &&
++		    cop->status == RTE_CRYPTO_OP_STATUS_SUCCESS) {
++			switch (cop->asym->rsa.op_type) {
++			case RTE_CRYPTO_ASYM_OP_SIGN:
++				memcpy(cop->asym->rsa.sign.data, op_cookie->sign,
++					cop->asym->rsa.sign.length);
++				break;
++			case RTE_CRYPTO_ASYM_OP_ENCRYPT:
++				memcpy(cop->asym->rsa.cipher.data, op_cookie->cipher,
++					cop->asym->rsa.cipher.length);
++				break;
++			case RTE_CRYPTO_ASYM_OP_DECRYPT:
++				memcpy(cop->asym->rsa.message.data, op_cookie->message,
++					cop->asym->rsa.message.length);
++				break;
++			default:
++				/* Verification has two inputs and no output buffer. */
++				break;
++			}
++		}
++
++
+ 		rx_pkts[i] = cop;
+ 		rte_mempool_put(vq->mpool, op_cookie);
+ 
+@@ -708,6 +730,46 @@ virtqueue_crypto_asym_enqueue_xmit_split(
+ 	uint16_t num_entry;
+ 	uint16_t head_idx;
+ 	uint16_t idx = 0;
++	rte_crypto_param *src, *dst;
++	size_t src_offset, dst_offset;
++	bool verify = asym_op->rsa.op_type == RTE_CRYPTO_ASYM_OP_VERIFY;
++
++	switch (asym_op->rsa.op_type) {
++	case RTE_CRYPTO_ASYM_OP_SIGN:
++		src = &asym_op->rsa.message;
++		dst = &asym_op->rsa.sign;
++		src_offset = offsetof(struct virtio_crypto_op_cookie, message);
++		dst_offset = offsetof(struct virtio_crypto_op_cookie, sign);
++		break;
++	case RTE_CRYPTO_ASYM_OP_VERIFY:
++		src = &asym_op->rsa.sign;
++		dst = &asym_op->rsa.message;
++		src_offset = offsetof(struct virtio_crypto_op_cookie, sign);
++		dst_offset = offsetof(struct virtio_crypto_op_cookie, message);
++		break;
++	case RTE_CRYPTO_ASYM_OP_ENCRYPT:
++		src = &asym_op->rsa.message;
++		dst = &asym_op->rsa.cipher;
++		src_offset = offsetof(struct virtio_crypto_op_cookie, message);
++		dst_offset = offsetof(struct virtio_crypto_op_cookie, cipher);
++		break;
++	case RTE_CRYPTO_ASYM_OP_DECRYPT:
++		src = &asym_op->rsa.cipher;
++		dst = &asym_op->rsa.message;
++		src_offset = offsetof(struct virtio_crypto_op_cookie, cipher);
++		dst_offset = offsetof(struct virtio_crypto_op_cookie, message);
++		break;
++	default:
++		return -EINVAL;
++	}
++	/* All three cookie buffers cover the advertised maximum RSA modulus.
++	 * Reject bad lengths before acquiring a cookie or touching user data.
++	 */
++	if (src->length > VIRTIO_CRYPTO_MAX_RSA_SIZE ||
++	    dst->length > VIRTIO_CRYPTO_MAX_RSA_SIZE ||
++	    (src->length && src->data == NULL) ||
++	    (dst->length && dst->data == NULL))
++		return -EINVAL;
+ 
+ 	if (unlikely(txvq->vq_free_cnt == 0))
+ 		return -ENOSPC;
+@@ -727,8 +789,11 @@ virtqueue_crypto_asym_enqueue_xmit_split(
+ 	indirect_op_data_req_phys_addr =
+ 		rte_mempool_virt2iova(crypto_op_cookie);
+ 	op_data_req = (struct virtio_crypto_op_data_req *)crypto_op_cookie;
+-	if (virtqueue_crypto_asym_pkt_header_arrange(cop, op_data_req, session))
++	if (virtqueue_crypto_asym_pkt_header_arrange(cop, op_data_req, session)) {
++		rte_mempool_put(txvq->mpool, crypto_op_cookie);
++		dxp->cookie = NULL;
+ 		return -EFAULT;
++	}
+ 
+ 	/* status is initialized to VIRTIO_CRYPTO_ERR */
+ 	((struct virtio_crypto_inhdr *)
+@@ -749,50 +814,22 @@ virtqueue_crypto_asym_enqueue_xmit_split(
+ 	desc[idx].len = req_data_len;
+ 	desc[idx++].flags = VRING_DESC_F_NEXT;
+ 
+-	if (asym_op->rsa.op_type == RTE_CRYPTO_ASYM_OP_SIGN) {
+-		/* indirect vring: src data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.message.data);
+-		desc[idx].len = asym_op->rsa.message.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT;
+-
+-		/* indirect vring: dst data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.sign.data);
+-		desc[idx].len = asym_op->rsa.sign.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT | VRING_DESC_F_WRITE;
+-	} else if (asym_op->rsa.op_type == RTE_CRYPTO_ASYM_OP_VERIFY) {
+-		/* indirect vring: src data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.sign.data);
+-		desc[idx].len = asym_op->rsa.sign.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT;
+-
+-		/* indirect vring: dst data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.message.data);
+-		desc[idx].len = asym_op->rsa.message.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT;
+-	} else if (asym_op->rsa.op_type == RTE_CRYPTO_ASYM_OP_ENCRYPT) {
+-		/* indirect vring: src data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.message.data);
+-		desc[idx].len = asym_op->rsa.message.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT;
+-
+-		/* indirect vring: dst data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.cipher.data);
+-		desc[idx].len = asym_op->rsa.cipher.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT | VRING_DESC_F_WRITE;
+-	} else if (asym_op->rsa.op_type == RTE_CRYPTO_ASYM_OP_DECRYPT) {
+-		/* indirect vring: src data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.cipher.data);
+-		desc[idx].len = asym_op->rsa.cipher.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT;
++	/* Ordinary application buffers need not be mapped by a vDPA backend.
++	 * Stage input and output in the DMA-visible operation cookie.
++	 */
++	if (src->length)
++		memcpy((uint8_t *)crypto_op_cookie + src_offset, src->data, src->length);
++	if (verify && dst->length)
++		memcpy((uint8_t *)crypto_op_cookie + dst_offset, dst->data, dst->length);
++	else
++		memset((uint8_t *)crypto_op_cookie + dst_offset, 0, dst->length);
+ 
+-		/* indirect vring: dst data */
+-		desc[idx].addr = rte_mem_virt2iova(asym_op->rsa.message.data);
+-		desc[idx].len = asym_op->rsa.message.length;
+-		desc[idx++].flags = VRING_DESC_F_NEXT | VRING_DESC_F_WRITE;
+-	} else {
+-		VIRTIO_CRYPTO_TX_LOG_ERR("Invalid asym op");
+-		return -EINVAL;
+-	}
++	desc[idx].addr = indirect_op_data_req_phys_addr + src_offset;
++	desc[idx].len = src->length;
++	desc[idx++].flags = VRING_DESC_F_NEXT;
++	desc[idx].addr = indirect_op_data_req_phys_addr + dst_offset;
++	desc[idx].len = dst->length;
++	desc[idx++].flags = VRING_DESC_F_NEXT | (verify ? 0 : VRING_DESC_F_WRITE);
+ 
+ 	/* indirect vring: last part, status returned */
+ 	desc[idx].addr = indirect_op_data_req_phys_addr + req_data_len;
+-- 
+2.51.0
+

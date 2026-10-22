@@ -10,13 +10,24 @@ permissions:
 jobs:
   virtio:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install build and emulation tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential meson ninja-build pkg-config libnuma-dev libssl-dev python3-pyelftools qemu-system-x86 busybox-static zstd
+          sudo apt-get install -y build-essential meson ninja-build pkg-config libnuma-dev libssl-dev python3-pyelftools python3-venv libglib2.0-dev libfdt-dev nettle-dev busybox-static zstd iproute2
+      - name: Build pinned QEMU with crypto vhost feature propagation
+        run: |
+          curl --fail --location --retry 3 https://download.qemu.org/qemu-10.1.0.tar.xz -o "$RUNNER_TEMP/qemu.tar.xz"
+          echo "$(cat tests/qemu/RELEASE_SHA256)  $RUNNER_TEMP/qemu.tar.xz" | sha256sum --check
+          tar -xf "$RUNNER_TEMP/qemu.tar.xz" -C "$RUNNER_TEMP"
+          patch -d "$RUNNER_TEMP/qemu-10.1.0" -p1 < tests/qemu/0001-crypto-vhost-ack-features.patch
+          mkdir "$RUNNER_TEMP/qemu-build"
+          cd "$RUNNER_TEMP/qemu-build"
+          ../qemu-10.1.0/configure --target-list=x86_64-softmmu --disable-docs --disable-tools \
+            --disable-guest-agent --disable-werror --disable-gio --disable-pixman --disable-passt --enable-nettle
+          ninja -j 2 qemu-system-x86_64
       - name: Unpack a matching guest kernel and UIO modules
         run: |
           virtio_kernel_version=$(apt-cache depends linux-image-generic | awk '/Depends: linux-image-[0-9]/{sub("linux-image-", "", $2); print $2; exit}')
@@ -48,10 +59,12 @@ jobs:
             '-Denable_drivers=bus/*,mempool/ring,crypto/virtio,crypto/openssl' \
             -Denable_apps=test -Dexamples=vhost_crypto
           ninja -C "$RUNNER_TEMP/dpdk-build" -j 2
-      - name: Probe cleanup, session rejection, symmetric crypto and RSA
+      - name: PCI and vDPA error paths, symmetric crypto and RSA
         run: |
           python3 scripts/test-dpdk-virtio.py "$RUNNER_TEMP/dpdk-build" \
-            --kernel "$VIRTIO_GUEST_KERNEL" --modules "$VIRTIO_GUEST_MODULES"
+            --kernel "$VIRTIO_GUEST_KERNEL" --modules "$VIRTIO_GUEST_MODULES" \
+            --vdpa-modules "$VIRTIO_GUEST_MODULES/../../.." \
+            --qemu "$RUNNER_TEMP/qemu-build/qemu-system-x86_64"
       - name: Retain guest and backend diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,3 +74,4 @@ jobs:
             ${{ runner.temp }}/dpdk-build/meson-logs/
             ${{ runner.temp }}/dpdk-build/cvm-dpdk-virtio-tests/*.log
             ${{ runner.temp }}/dpdk-build/cvm-dpdk-virtio-tests/results.json
+            ${{ runner.temp }}/qemu-build/meson-logs/

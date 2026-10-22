@@ -1,0 +1,18 @@
+Subject: [test environment] crypto: pass negotiated features to vhost
+
+The crypto backend left acked_features zero. In an IOMMU guest, QEMU
+sent IOTLB messages while the backend had not negotiated IOMMU support.
+Use the intersection of guest-negotiated and backend-supported features.
+This companion patch targets QEMU 10.1.0, not DPDK.
+
+--- a/backends/cryptodev-vhost.c
++++ b/backends/cryptodev-vhost.c
+@@ -87,6 +87,8 @@
+ 
+     crypto->dev.nvqs = 1;
+     crypto->dev.vqs = crypto->vqs;
++
++    crypto->dev.acked_features = dev->guest_features & crypto->dev.features;
+ 
+     r = vhost_dev_enable_notifiers(&crypto->dev, dev);
+     if (r < 0) {

@@ -1,0 +1,138 @@
+From 4494dfc2ace394d487f960b1ecd382d4ca79a3e5 Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 04:00:21 -0700
+Subject: [PATCH] vhost/crypto: enable opt-in guest IOMMU translation in copy
+ mode
+
+---
+ doc/guides/sample_app_ug/vhost_crypto.rst |  3 +++
+ examples/vhost_crypto/main.c              | 19 +++++++++++++++++--
+ lib/vhost/vhost_crypto.c                  | 15 ++++++++++++++-
+ 3 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/doc/guides/sample_app_ug/vhost_crypto.rst b/doc/guides/sample_app_ug/vhost_crypto.rst
+index 5c44753..8913f0b 100644
+--- a/doc/guides/sample_app_ug/vhost_crypto.rst
++++ b/doc/guides/sample_app_ug/vhost_crypto.rst
+@@ -51,6 +51,9 @@ where,
+   in experimental stage and may cause the problem like segmentation fault. If
+   the user wants to use LKCF in the guest, this feature shall be turned off.
+ 
++* iommu-support: enable guest IOMMU address translation for the vhost socket.
++  This option requires copy mode and cannot be combined with ``--zero-copy``.
++
+ * guest-polling: the presence of this item means the application assumes the
+   guest works in polling mode, thus will NOT notify the guest completion of
+   processing.
+diff --git a/examples/vhost_crypto/main.c b/examples/vhost_crypto/main.c
+index 8bdfc40..ddb6854 100644
+--- a/examples/vhost_crypto/main.c
++++ b/examples/vhost_crypto/main.c
+@@ -60,6 +60,7 @@ struct vhost_crypto_options {
+ 	uint32_t zero_copy;
+ 	uint32_t guest_polling;
+ 	bool asymmetric_crypto;
++	bool iommu;
+ } options;
+ 
+ enum {
+@@ -73,6 +74,8 @@ enum {
+ 	OPT_POLLING_NUM,
+ #define OPT_ASYM            "asymmetric-crypto"
+ 	OPT_ASYM_NUM,
++#define OPT_IOMMU           "iommu-support"
++	OPT_IOMMU_NUM,
+ };
+ 
+ #define NB_SOCKET_FIELDS	(2)
+@@ -206,9 +209,10 @@ vhost_crypto_usage(const char *prgname)
+ 		"  --%s (lcore,cdev_id,queue_id)[,(lcore,cdev_id,queue_id)]\n"
+ 		"  --%s: zero copy\n"
+ 		"  --%s: guest polling\n"
+-		"  --%s: asymmetric crypto\n",
++		"  --%s: asymmetric crypto\n"
++		"  --%s: guest IOMMU support (copy mode only)\n",
+ 		prgname, OPT_SOCKET_FILE, OPT_CONFIG,
+-		OPT_ZERO_COPY, OPT_POLLING, OPT_ASYM);
++		OPT_ZERO_COPY, OPT_POLLING, OPT_ASYM, OPT_IOMMU);
+ }
+ 
+ static int
+@@ -229,6 +233,8 @@ vhost_crypto_parse_args(int argc, char **argv)
+ 				NULL, OPT_POLLING_NUM},
+ 		{OPT_ASYM, no_argument,
+ 				NULL, OPT_ASYM_NUM},
++		{OPT_IOMMU, no_argument,
++				NULL, OPT_IOMMU_NUM},
+ 		{NULL, 0, 0, 0}
+ 	};
+ 
+@@ -271,6 +277,9 @@ vhost_crypto_parse_args(int argc, char **argv)
+ 		case OPT_ASYM_NUM:
+ 			options.asymmetric_crypto = true;
+ 			break;
++		case OPT_IOMMU_NUM:
++			options.iommu = true;
++			break;
+ 
+ 		default:
+ 			vhost_crypto_usage(prgname);
+@@ -278,6 +287,11 @@ vhost_crypto_parse_args(int argc, char **argv)
+ 		}
+ 	}
+ 
++	if (options.iommu && options.zero_copy == RTE_VHOST_CRYPTO_ZERO_COPY_ENABLE) {
++		RTE_LOG(ERR, USER1, "IOMMU support requires copy mode\n");
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -623,6 +637,7 @@ main(int argc, char *argv[])
+ 
+ 		for (j = 0; j < lo->nb_sockets; j++) {
+ 			ret = rte_vhost_driver_register(lo->socket_files[j],
++				options.iommu ? RTE_VHOST_USER_IOMMU_SUPPORT :
+ 				RTE_VHOST_USER_ASYNC_COPY);
+ 			if (ret < 0) {
+ 				RTE_LOG(ERR, USER1, "socket %s already exists\n",
+diff --git a/lib/vhost/vhost_crypto.c b/lib/vhost/vhost_crypto.c
+index 648e2d7..3b7303c 100644
+--- a/lib/vhost/vhost_crypto.c
++++ b/lib/vhost/vhost_crypto.c
+@@ -1786,10 +1786,17 @@ RTE_EXPORT_SYMBOL(rte_vhost_crypto_driver_start)
+ int
+ rte_vhost_crypto_driver_start(const char *path)
+ {
++	uint64_t features;
+ 	uint64_t protocol_features;
+ 	int ret;
+ 
+-	ret = rte_vhost_driver_set_features(path, VIRTIO_CRYPTO_FEATURES);
++	ret = rte_vhost_driver_get_features(path, &features);
++	if (ret)
++		return -1;
++	/* Retain IOMMU support explicitly enabled at socket registration. */
++	features = VIRTIO_CRYPTO_FEATURES |
++		(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM));
++	ret = rte_vhost_driver_set_features(path, features);
+ 	if (ret)
+ 		return -1;
+ 
+@@ -1935,6 +1942,12 @@ rte_vhost_crypto_set_zero_copy(int vid, enum rte_vhost_crypto_zero_copy option)
+ 		VC_LOG_ERR("Invalid option %i", option);
+ 		return -EINVAL;
+ 	}
++	/* The zero-copy path translates guest physical addresses directly. */
++	if (option == RTE_VHOST_CRYPTO_ZERO_COPY_ENABLE &&
++	    (dev->flags & VIRTIO_DEV_SUPPORT_IOMMU)) {
++		VC_LOG_ERR("Zero copy does not support guest IOMMU translation");
++		return -ENOTSUP;
++	}
+ 
+ 	vcrypto = (struct vhost_crypto *)dev->extern_data;
+ 	if (unlikely(vcrypto == NULL)) {
+-- 
+2.51.0
+

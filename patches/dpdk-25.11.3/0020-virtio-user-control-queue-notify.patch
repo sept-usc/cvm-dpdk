@@ -1,0 +1,38 @@
+From 7a92bf81a0a6ecfe4fb083c612460c8f6f7cf1fd Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 03:49:23 -0700
+Subject: [PATCH] crypto/virtio: initialize and release control queue
+ notifications
+
+---
+ drivers/crypto/virtio/virtio_user/virtio_user_dev.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/crypto/virtio/virtio_user/virtio_user_dev.c b/drivers/crypto/virtio/virtio_user/virtio_user_dev.c
+index ba3b525..819dcb1 100644
+--- a/drivers/crypto/virtio/virtio_user/virtio_user_dev.c
++++ b/drivers/crypto/virtio/virtio_user/virtio_user_dev.c
+@@ -200,7 +200,8 @@ virtio_user_foreach_queue(struct virtio_user_dev *dev,
+ {
+ 	uint32_t i, nr_vq;
+ 
+-	nr_vq = dev->max_queue_pairs;
++	/* The control queue also needs call/kick fds and backend setup. */
++	nr_vq = dev->max_queue_pairs + 1;
+ 
+ 	for (i = 0; i < nr_vq; i++)
+ 		if (fn(dev, i) < 0)
+@@ -264,10 +265,6 @@ crypto_virtio_user_start_device(struct virtio_user_dev *dev)
+ 	if (ret < 0)
+ 		goto error;
+ 
+-	ret = virtio_user_kick_queue(dev, dev->max_queue_pairs);
+-	if (ret < 0)
+-		goto error;
+-
+ 	/* Step 4: enable queues */
+ 	for (int i = 0; i < dev->max_queue_pairs; i++) {
+ 		ret = dev->ops->enable_qp(dev, i, 1);
+-- 
+2.51.0
+

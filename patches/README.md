@@ -67,6 +67,12 @@ that differs from the recorded release is rejected before any changes.
 | 0015 | Select the non-NUMA forwarding pool before resolving its private peer | Testpmd CLI regression, 2026-10-22 |
 | 0016 | Release the cryptodev and PCI mappings after failed virtio-crypto probe | Isolated guest error-path regression, 2026-10-22 |
 | 0017 | Return an error when the virtio backend rejects a symmetric session | Backend rejection, pool recovery and supported-session control |
+| 0018 | Reject a startup that never reaches DRIVER_OK | Real vDPA memlock failure and successful retry |
+| 0019 | Use the split used ring's IOVA instead of its virtual address | vDPA guest with emulated IOMMU and IOVA=PA |
+| 0020 | Initialize and release control queue notifications | Real eventfd notification through vhost-vDPA |
+| 0021 | Preserve opt-in IOMMU negotiation and expose a copy-mode backend profile | Full crypto through translated guest addresses; incompatible zero-copy mode rejected |
+| 0022 | Permit device reset when a vDPA backend cannot report queue indices | Repeated stop/configure/start with vp_vdpa |
+| 0023 | Stage split-ring RSA input/output in DMA-visible cookies and check buffer bounds | Original RSA suite and repeated rejection/queue-reuse regression |
 
 Patch 0006 folds intermediate experiments and reversions into the tested final
 state. It was recovered on 2026-10-20 by reading the powered-off CVM disk and
@@ -88,6 +94,7 @@ Their implementation is unchanged.
 | Official release, through 0015 | `7f67782d633d0cfae4b5416078b84b7e483a9b92` |
 | Official release, through 0016 | `2644fc372df079b4894dd818465eee82743f2f8f` |
 | Official release, through 0017 | `671597eb6070ffecae8d44077408f684122c98df` |
+| Official release, through 0023 | `0f20ffdafbb5a750517165235b9d3e1f3c3777dc` |
 | Archived CVM import | `d09d6d6f46cef3d6234ba7f11ee7e187e0ca4e02` |
 | Conservative baseline, through 0006 | `6dc438c1e5f09ee298ef7d84f1f490e19f96b352` |
 | Private bridge, through 0007 | `2b6019b4092fc728203063b0a05fa3ae899d0838` |
@@ -100,6 +107,7 @@ Their implementation is unchanged.
 | Non-NUMA forwarding pool, through 0015 | `b0f716046d79ea645de74af7f966c52b4170dd75` |
 | Virtio-crypto probe cleanup, through 0016 | `67a4cccbf68e6424f4eec9560442df58091f10db` |
 | Virtio-crypto session errors, through 0017 | `8b61c7fb0ed0917f1d13b37f6a1af666d775e7eb` |
+| Virtio-user vDPA support, through 0023 | `bec1ea9370c9b09687232ef3e4d5ab63dd2c1e1d` |
 
 The tree through 0008 corresponds to the archived receiver implementation.
 Patches 0009 and 0010 extend that implementation; the earlier patches remain

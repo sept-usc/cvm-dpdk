@@ -1,0 +1,38 @@
+From 9fcac2f29f446bb069b52a28d16830d75d3db5cd Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 04:00:22 -0700
+Subject: [PATCH] crypto/virtio: allow reset when vDPA cannot report queue
+ state
+
+---
+ drivers/crypto/virtio/virtio_user/vhost_vdpa.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/virtio/virtio_user/vhost_vdpa.c b/drivers/crypto/virtio/virtio_user/vhost_vdpa.c
+index b583987..cd24a76 100644
+--- a/drivers/crypto/virtio/virtio_user/vhost_vdpa.c
++++ b/drivers/crypto/virtio/virtio_user/vhost_vdpa.c
+@@ -403,8 +403,19 @@ static int
+ vhost_vdpa_get_vring_base(struct virtio_user_dev *dev, struct vhost_vring_state *state)
+ {
+ 	struct vhost_vdpa_data *data = dev->backend_data;
++	int ret;
+ 
+-	return vhost_vdpa_ioctl(data->vhostfd, VHOST_GET_VRING_BASE, state);
++	ret = ioctl(data->vhostfd, VHOST_GET_VRING_BASE, state);
++	/* Queue teardown discards this state and resets the device. Some
++	 * backends, including vp_vdpa, cannot report live queue indices.
++	 */
++	if (ret < 0 && errno == EOPNOTSUPP) {
++		state->num = 0;
++		return 0;
++	}
++	if (ret)
++		PMD_DRV_LOG(ERR, "Failed to get vring base (%s)", strerror(errno));
++	return ret;
+ }
+ 
+ static int
+-- 
+2.51.0
+

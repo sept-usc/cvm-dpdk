@@ -704,5 +704,40 @@
       "diagnostic": "LeakSanitizer could not inspect threads under the restricted executor/ptrace; rerun outside that executor with checks unchanged passed",
       "log_sha256": "c0c350be37d664b86837d4b37491b7ab51ece5210f865587ad0558c739ed8844"
     }
+  },
+  "github_ci": {
+    "commit": "0b0c2c0a8c7b4c3c5dbce9dd6c68fb639c2bcb3f",
+    "workflows": [
+      {
+        "name": "Portable checks",
+        "run_id": 39764583399,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583399"
+      },
+      {
+        "name": "DPDK integration",
+        "run_id": 39764583428,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583428"
+      },
+      {
+        "name": "DPDK extended software tests",
+        "run_id": 39764583437,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583437"
+      },
+      {
+        "name": "DPDK ARM64 emulation",
+        "run_id": 39764583248,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583248"
+      },
+      {
+        "name": "DPDK virtio crypto guests",
+        "run_id": 39764583525,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583525"
+      }
+    ]
   }
 }

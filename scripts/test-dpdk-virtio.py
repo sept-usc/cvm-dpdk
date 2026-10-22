@@ -20,13 +20,41 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 SYMMETRIC = "cryptodev_virtio_autotest"
 ASYMMETRIC = "cryptodev_virtio_asym_autotest"
+MAX_LOG_BYTES = 64 * 1024 * 1024
 
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def compile_session_check(build, output):
+def run_guest(command, log, log_paths, environment, backend):
+    """Stop a failed backend or excessive diagnostic loop without filling disk."""
+    reason = None
+    deadline = time.monotonic() + 900
+    with subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=environment) as guest:
+        while True:
+            try:
+                status = guest.wait(timeout=0.2)
+                break
+            except subprocess.TimeoutExpired:
+                if time.monotonic() >= deadline:
+                    reason = "guest timeout"
+                elif backend is not None and backend.poll() is not None:
+                    reason = "backend exited before guest completion"
+                elif any(path.exists() and path.stat().st_size > MAX_LOG_BYTES for path in log_paths):
+                    reason = "guest or backend log exceeded 64 MiB"
+                if reason:
+                    guest.terminate()
+                    try:
+                        status = guest.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        guest.kill()
+                        status = guest.wait()
+                    break
+    return status, reason
+
+
+def compile_session_check(build, output, name="session"):
     database = json.loads((build / "compile_commands.json").read_text())
     entry = next(row for row in database if row["file"].endswith("/app/test/test.c"))
     command, skip = [], False
@@ -37,9 +65,10 @@ def compile_session_check(build, output):
             skip = True
         elif word not in ("-c", "-MD", "-MMD", entry["file"]):
             command.append(word)
-    obj = output / "session-check.o"
-    binary = output / "session-check"
-    subprocess.run(command + ["-c", str(ROOT / "tests/dpdk/test_virtio_session_error.c"),
+    obj = output / f"{name}-check.o"
+    binary = output / f"{name}-check"
+    command += ["-I", str((build / entry["file"]).resolve().parent)]
+    subprocess.run(command + ["-c", str(ROOT / f"tests/dpdk/test_virtio_{name}_error.c"),
                               "-o", str(obj)], cwd=build, check=True)
     commands = subprocess.check_output(["ninja", "-t", "commands", "app/dpdk-test"],
                                        cwd=build, text=True).splitlines()
@@ -53,7 +82,7 @@ def compile_session_check(build, output):
 
 
 def module_bytes(directory, name):
-    paths = list(directory.glob(name + ".ko*"))
+    paths = list(directory.rglob(name + ".ko*"))
     if len(paths) != 1:
         raise RuntimeError(f"Expected one {name}.ko module in {directory}")
     path = paths[0]
@@ -66,12 +95,15 @@ def module_bytes(directory, name):
     return path.read_bytes()
 
 
-def make_initramfs(path, program, busybox, modules, tests, bind):
+def make_initramfs(path, program, busybox, modules, tests, bind, vdpa=None):
     entries = {}
     for name in ("bin", "dev", "proc", "sys", "tmp", "run", "var", "var/run",
                  "mnt", "mnt/huge", "lib", "lib/x86_64-linux-gnu", "lib64", "modules"):
         entries[name] = (stat.S_IFDIR | 0o755, b"", 0, 0)
-    for name, source in (("bin/busybox", busybox), ("test-program", program)):
+    programs = [("bin/busybox", busybox), ("test-program", program)]
+    if vdpa:
+        programs.append(("bin/vdpa", vdpa))
+    for name, source in programs:
         entries[name] = (stat.S_IFREG | 0o755, source.read_bytes(), 0, 0)
         result = subprocess.run(["ldd", str(source)], capture_output=True, text=True)
         if result.returncode and not any(s in result.stdout + result.stderr for s in
@@ -93,6 +125,17 @@ def make_initramfs(path, program, busybox, modules, tests, bind):
         setup = """echo 0000:00:04.0 > /sys/bus/pci/drivers/virtio-pci/unbind || fail unbind
 echo '1af4 1054' > /sys/bus/pci/drivers/uio_pci_generic/new_id || fail bind
 [ -e /dev/uio0 ] || fail missing_uio"""
+    if vdpa:
+        setup = """for module in vdpa vp_vdpa vhost_iotlb vhost irqbypass vhost_vdpa; do
+    $bb insmod /modules/$module.ko || fail $module
+done
+echo 0000:00:04.0 > /sys/bus/pci/drivers/virtio-pci/unbind || fail unbind
+echo '1af4 1054' > /sys/bus/pci/drivers/vp-vdpa/new_id || fail bind_vp_vdpa
+vdpa mgmtdev show || fail mgmtdev
+vdpa dev add name crypto0 mgmtdev pci/0000:00:04.0 || fail vdpa_add
+vdpa dev show || fail vdpa_show
+[ -e /dev/vhost-vdpa-0 ] || fail missing_vhost_vdpa
+ulimit -l unlimited || fail memlock"""
     init = """#!/bin/sh
 export PATH=/bin
 bb=/bin/busybox
@@ -117,6 +160,8 @@ done
 echo VIRTIO_GUEST_FINISHED
 $bb poweroff -f
 """.replace("SETUP\n", setup + "\n").replace("TEST_NAMES", " ".join(tests))
+    if vdpa:
+        init = init.replace("-a 0000:00:04.0", "--no-pci --vdev=crypto_virtio_user0,path=/dev/vhost-vdpa-0")
     entries["init"] = (stat.S_IFREG | 0o755, init.encode(), 0, 0)
     archive = bytearray()
     # Device nodes are encoded into the guest archive; no host mknod is needed.
@@ -138,10 +183,15 @@ def main():
     parser.add_argument("--kernel", type=Path, required=True)
     parser.add_argument("--modules", type=Path, required=True,
                         help="Matching kernel/drivers/uio directory")
+    parser.add_argument("--vdpa-modules", type=Path,
+                        help="Matching kernel module tree; enables additional virtio-user vDPA guests")
+    parser.add_argument("--vdpa", default="vdpa", help="iproute2 vdpa executable for the guest")
     parser.add_argument("--qemu", default="qemu-system-x86_64")
     parser.add_argument("--busybox", default="busybox")
     parser.add_argument("--cpus", help="Four allowed host CPU IDs, comma-separated")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--case", action="append", dest="selected_cases",
+                        help="Run only a named case; repeat to select several (default: all available cases)")
     args = parser.parse_args()
     build = args.build.resolve()
     binary = build / "app/dpdk-test"
@@ -160,6 +210,16 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     session_check = compile_session_check(build, output)
     modules = {name: module_bytes(args.modules, name) for name in ("uio", "uio_pci_generic")}
+    vdpa = None
+    if args.vdpa_modules:
+        vdpa = shutil.which(args.vdpa)
+        if not vdpa:
+            parser.error("The iproute2 vdpa executable is required with --vdpa-modules")
+        vdpa = Path(vdpa)
+        modules.update({name: module_bytes(args.vdpa_modules, name) for name in
+                        ("vdpa", "vp_vdpa", "vhost_iotlb", "vhost", "irqbypass", "vhost_vdpa")})
+        start_check = compile_session_check(build, output, "start")
+        rsa_check = compile_session_check(build, output, "rsa")
     environment = os.environ.copy()
     for key in ("DPDK_TEST", "DPDK_TEST_PARAMS", "DPDK_TEST_SKIP"):
         environment.pop(key, None)
@@ -174,15 +234,30 @@ def main():
         "guest_hugepage_count": 1024, "guest_hugepage_size_mib": 2,
         "guest_eal_memory_mib": 1024, "backend_eal_memory_mib": 1024,
         "timeout_seconds_per_guest": 900, "cases": [],
+        "stop_if_log_exceeds_bytes": MAX_LOG_BYTES,
     }
     cases = [("failed-probe", binary, [SYMMETRIC, ASYMMETRIC], False, None, 77),
              ("session-rejection", session_check, ["virtio_session_error"], True, None, 0),
              ("symmetric", binary, [SYMMETRIC], True, "sym", 0),
              ("asymmetric", binary, [ASYMMETRIC], True, "asym", 0)]
+    if vdpa:
+        record.update(vdpa_tool_sha256=digest(vdpa), start_check_sha256=digest(start_check),
+                      rsa_check_sha256=digest(rsa_check))
+        cases += [("vdpa-start-failure", start_check, ["virtio_start_error"], False, None, 0),
+                  ("vdpa-symmetric", binary, ["cryptodev_virtio_user_autotest"], False, "sym", 0),
+                  ("vdpa-asymmetric", binary, ["cryptodev_virtio_user_asym_autotest"], False, "asym", 0),
+                  ("vdpa-rsa-buffers", rsa_check, ["virtio_rsa_error"], False, "asym", 0)]
+    if args.selected_cases:
+        missing = set(args.selected_cases) - {case[0] for case in cases}
+        if missing:
+            parser.error(f"Cases unavailable in this profile: {', '.join(sorted(missing))}")
+        cases = [case for case in cases if case[0] in args.selected_cases]
+    record["selected_cases"] = [case[0] for case in cases]
     for name, program, tests, bind, mode, expected in cases:
         print(f"Running {name}; guest log: {output / (name + '.log')}", flush=True)
         initrd = output / (name + ".cpio.gz")
-        make_initramfs(initrd, program, Path(busybox), modules, tests, bind)
+        is_vdpa = name.startswith("vdpa-")
+        make_initramfs(initrd, program, Path(busybox), modules, tests, bind, vdpa if is_vdpa else None)
         result = {"name": name, "expected_exit_status": expected, "initramfs_sha256": digest(initrd)}
         with tempfile.TemporaryDirectory(prefix="cvm-vcrypto-") as runtime:
             socket = Path(runtime) / "crypto.sock"
@@ -194,6 +269,8 @@ def main():
                                "--config", f"({cpus[1]},0,0)", "--socket-file", f"{cpus[1]},{socket}"]
                     if mode == "asym":
                         command.append("--asymmetric-crypto")
+                    if is_vdpa:
+                        command.append("--iommu-support")
                     result["backend_command"] = command
                     with (output / (name + "-backend.log")).open("w") as log:
                         process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=environment)
@@ -214,15 +291,17 @@ def main():
                 else:
                     command += ["-object", "cryptodev-backend-builtin,id=crypto0,queues=1"]
                 command += ["-device", "virtio-crypto-pci,cryptodev=crypto0,addr=0x4"]
+                if is_vdpa:
+                    command[command.index("-machine") + 1] = "q35"
+                    command[command.index("-append") + 1] += " intel_iommu=on"
+                    command[-1] += ",iommu_platform=on,ats=on,vectors=3"
+                    command += ["-device", "intel-iommu,intremap=on,caching-mode=on"]
                 result["qemu_command"] = command
                 start = time.monotonic()
                 log_path = output / (name + ".log")
                 with log_path.open("w") as log:
-                    try:
-                        result["qemu_exit_status"] = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT,
-                                                                    timeout=900, env=environment, check=False).returncode
-                    except subprocess.TimeoutExpired:
-                        result["qemu_exit_status"] = 124
+                    result["qemu_exit_status"], result["interruption"] = run_guest(
+                        command, log, [log_path, output / (name + "-backend.log")], environment, process)
                 result["duration_seconds"] = round(time.monotonic() - start, 3)
                 text = log_path.read_text(errors="replace")
                 result["log_sha256"] = digest(log_path)
@@ -231,12 +310,25 @@ def main():
                                      re.findall(r"VIRTIO_TEST_RESULT (\S+) (\d+)", text)]
                 result["subcases"] = {key.lower(): int(value) for key, value in
                                       re.findall(r"\+ Tests (Total|Skipped|Executed|Unsupported|Passed|Failed)\s*:\s*(\d+)", text)}
-                result["passed"] = (result["qemu_exit_status"] == 0 and result["guest_finished"] and
+                result["passed"] = (not result["interruption"] and result["qemu_exit_status"] == 0 and result["guest_finished"] and
                                     result["results"] == [{"name": test, "exit_status": expected} for test in tests])
-                if mode:
+                if mode and program == binary:
                     result["passed"] &= result["subcases"].get("passed", 0) > 0 and result["subcases"].get("failed") == 0
+                if is_vdpa and mode:
+                    features = []
+                    with (output / (name + "-backend.log")).open(errors="replace") as backend_log:
+                        for line in backend_log:
+                            match = re.search(r"negotiated Virtio features: (0x[0-9a-fA-F]+)", line)
+                            if match:
+                                features.append(int(match.group(1), 16))
+                    result["backend_negotiated_features"] = sorted(set(features))
+                    result["passed"] &= bool(features) and all(value & (1 << 33) for value in features)
                 if name == "session-rejection":
                     result["passed"] &= "PASS: backend rejection returns EIO, pool recovers, cipher session succeeds" in text
+                if name == "vdpa-start-failure":
+                    result["passed"] &= "PASS: memory-pin failure returns EIO; retry and cipher session succeed" in text
+                if name == "vdpa-rsa-buffers":
+                    result["passed"] &= "PASS: 256 invalid RSA submissions rejected; queue signs and verifies with intact canaries" in text
             except (OSError, RuntimeError) as error:
                 result.update(passed=False, error=str(error))
             finally:

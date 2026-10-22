@@ -1,0 +1,38 @@
+From 41c2619559cc219df7edc3357308cc5b7d290c6b Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 03:49:22 -0700
+Subject: [PATCH] crypto/virtio: reject incomplete device startup
+
+---
+ drivers/crypto/virtio/virtio_cryptodev.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/crypto/virtio/virtio_cryptodev.c b/drivers/crypto/virtio/virtio_cryptodev.c
+index 4a79fc0..67f388d 100644
+--- a/drivers/crypto/virtio/virtio_cryptodev.c
++++ b/drivers/crypto/virtio/virtio_cryptodev.c
+@@ -663,6 +663,7 @@ static int
+ virtio_crypto_dev_start(struct rte_cryptodev *dev)
+ {
+ 	struct virtio_crypto_hw *hw = dev->data->dev_private;
++	uint8_t status;
+ 
+ 	if (dev->data->dev_started)
+ 		return 0;
+@@ -670,6 +671,13 @@ virtio_crypto_dev_start(struct rte_cryptodev *dev)
+ 	/* Do final configuration before queue engine starts */
+ 	virtio_crypto_dataq_start(dev);
+ 	vtpci_cryptodev_reinit_complete(hw);
++	status = VTPCI_OPS(hw)->get_status(hw);
++	if (!(status & VIRTIO_CONFIG_STATUS_DRIVER_OK) ||
++	    (status & (VIRTIO_CONFIG_STATUS_DEV_NEED_RESET |
++		       VIRTIO_CONFIG_STATUS_FAILED))) {
++		VIRTIO_CRYPTO_DRV_LOG_ERR("Device did not enter DRIVER_OK state");
++		return -EIO;
++	}
+ 
+ 	dev->data->dev_started = 1;
+ 
+-- 
+2.51.0
+
