@@ -25,6 +25,7 @@ before the rename for traceability; current commands are in the guides above.
 | [2026-10-21 upstream failure fixes](VALIDATION-2026-10-21-upstream-fixes.md) | Root causes, corrective patches, and targeted before/after validation |
 | [2026-10-21 test setup fixes](VALIDATION-2026-10-21-test-setup.md) | BPF discovery, scheduler availability reporting, and reproducible software-device CI coverage |
 | [2026-10-21 RX and PMD test setup](VALIDATION-2026-10-21-software-rx-pmd.md) | RX adapter memory budget, PMD ring loopback, and reproducible negative controls |
+| [2026-10-22 extended upstream tests](VALIDATION-2026-10-22-extended-tests.md) | Scheduler and software crypto, BPF ELF, dispatcher, pcapng, vhost interrupt queues, and IPsec performance fixture repair |
 | [Kernel issues and history](../kmod/ISSUES.md) | Allocation and lifetime behavior, design constraints, known gaps |
 
 ## Runnable experiments

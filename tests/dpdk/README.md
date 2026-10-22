@@ -51,6 +51,28 @@ for before/after evidence and limits. RX interrupts, hugepage subprocess tests,
 long mempool benchmarks and timing-sensitive timer tests are outside this
 small CI profile.
 
+For the separate extended software profile, also install the development
+packages for Intel IPSec Multi-Buffer, OpenSSL, libelf and libpcap, plus
+Clang with BPF support and `xxd`. Enable
+`crypto/ipsec_mb,crypto/scheduler,crypto/openssl,event/dsw,event/skeleton,net/vhost`
+alongside `bus/*,mempool/ring,net/null,net/ring`, then run:
+
+```sh
+bash scripts/test-dpdk-extended.sh /path/to/dpdk/build
+```
+
+This requires four available CPUs on one NUMA node, local Unix socket binding,
+and up to 4 GiB of EAL memory plus process/OS overhead. It runs fourteen
+commands, fails on top-level skips, and retains per-command logs and exit
+statuses under `cvm-dpdk-extended-tests/`. The scheduler is enabled here;
+the separate registration regression above still needs a scheduler-disabled
+build. The [extended validation](../../docs/VALIDATION-2026-10-22-extended-tests.md)
+records internal crypto skips and the before/after IPsec crash evidence.
+The vhost RX interrupt test covers queue registration and lookup using real
+epoll descriptors; it does not send packets or validate NIC interrupt delivery.
+IPsec performance measures library prepare/process calls and bypasses actual
+encryption, even though its setup now uses valid crypto sessions.
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh

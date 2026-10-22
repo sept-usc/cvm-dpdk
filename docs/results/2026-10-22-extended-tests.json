@@ -1,0 +1,584 @@
+{
+  "baseline_repository_revision": "b60752d6f785cfd27b50c84c251616c60a4c9df0",
+  "patch": "0014-ipsec-perf-valid-sessions.patch",
+  "source_trees": {
+    "RESULT_TREE": "02c3374df711bf75e3eb456a613b41afbd11d764",
+    "RELEASE_RESULT_TREE": "b2860235e5abd41775032e82876ec21c477b9c7c"
+  },
+  "runner": {
+    "command": [
+      "taskset",
+      "-c",
+      "24-27",
+      "bash",
+      "scripts/test-dpdk-extended.sh",
+      "/tmp/cvm-dpdk-followup-20261022/build"
+    ],
+    "exit_status": 0,
+    "binary_sha256": "6a8a3dbecb9b3624196ebd801b8fe8733c703913a453a740afd8bfb2ee88bc92",
+    "results": [
+      {
+        "name": "cryptodev_scheduler_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_scheduler_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry ",
+        "total_subcases": 1058,
+        "skipped_subcases": 184,
+        "executed_subcases": 874,
+        "passed_subcases": 874,
+        "failed_subcases": 0
+      },
+      {
+        "name": "dispatcher_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=dispatcher_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry ",
+        "total_subcases": 4,
+        "skipped_subcases": 0,
+        "executed_subcases": 4,
+        "passed_subcases": 4,
+        "failed_subcases": 0
+      },
+      {
+        "name": "bpf_elf_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=bpf_elf_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry "
+      },
+      {
+        "name": "pcapng_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=pcapng_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry ",
+        "total_subcases": 2,
+        "skipped_subcases": 0,
+        "executed_subcases": 2,
+        "passed_subcases": 2,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_aesni_mb_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_aesni_mb_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_aesni_mb0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 286,
+        "executed_subcases": 639,
+        "passed_subcases": 639,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_cpu_aesni_mb_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_cpu_aesni_mb_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_aesni_mb0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 619,
+        "executed_subcases": 306,
+        "passed_subcases": 306,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_aesni_gcm_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_aesni_gcm_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_aesni_gcm0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 842,
+        "executed_subcases": 83,
+        "passed_subcases": 83,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_cpu_aesni_gcm_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_cpu_aesni_gcm_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_aesni_gcm0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 847,
+        "executed_subcases": 78,
+        "passed_subcases": 78,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_chacha_poly_mb_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_chacha_poly_mb_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_chacha20_poly13050 ",
+        "total_subcases": 925,
+        "skipped_subcases": 919,
+        "executed_subcases": 6,
+        "passed_subcases": 6,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_sw_snow3g_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_sw_snow3g_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_snow3g0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 880,
+        "executed_subcases": 45,
+        "passed_subcases": 45,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_sw_kasumi_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_sw_kasumi_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_kasumi0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 894,
+        "executed_subcases": 31,
+        "passed_subcases": 31,
+        "failed_subcases": 0
+      },
+      {
+        "name": "cryptodev_sw_zuc_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=cryptodev_sw_zuc_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_zuc0 ",
+        "total_subcases": 925,
+        "skipped_subcases": 894,
+        "executed_subcases": 31,
+        "passed_subcases": 31,
+        "failed_subcases": 0
+      },
+      {
+        "name": "ipsec_perf_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=ipsec_perf_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 2048 --no-pci --no-shconf --no-telemetry --vdev=crypto_openssl0 "
+      },
+      {
+        "name": "event_eth_rx_intr_adapter_autotest",
+        "exit_status": 0,
+        "invocation": "DPDK_TEST=event_eth_rx_intr_adapter_autotest /tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test -l 24\\,25\\,26\\,27 --no-huge -m 4096 --no-pci --no-shconf --no-telemetry --vdev=net_vhost0\\,iface=/tmp/cvm-dpdk-extended.Xp0drksm/rx.sock\\,queues=4 ",
+        "total_subcases": 2,
+        "skipped_subcases": 0,
+        "executed_subcases": 2,
+        "passed_subcases": 2,
+        "failed_subcases": 0
+      }
+    ]
+  },
+  "initial_expanded_profile": {
+    "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+    "sha256": "7e6bc6e5ad4d51e6b13de92eb00a87de4a343f024e08911f395fa6dd10c48a43",
+    "results": [
+      {
+        "name": "cryptodev_scheduler_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656714.5999496,
+        "duration_seconds": 4.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "dispatcher_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656718.6023412,
+        "duration_seconds": 2.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "bpf_elf_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656720.6049275,
+        "duration_seconds": 1.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "pcapng_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656721.6068678,
+        "duration_seconds": 7.002,
+        "exit_status": 0,
+        "timed_out": false
+      }
+    ]
+  },
+  "pristine_comparisons": {
+    "binary": "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+    "sha256": "e4bc767d65870d13bece2574a0ec99bd09a7777e3ddf5b79e444a87e99d80451",
+    "results": [
+      {
+        "name": "cryptodev_scheduler_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656792.4206662,
+        "duration_seconds": 3.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "dispatcher_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656795.422992,
+        "duration_seconds": 2.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "bpf_elf_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656797.4255254,
+        "duration_seconds": 1.002,
+        "exit_status": 0,
+        "timed_out": false
+      },
+      {
+        "name": "pcapng_autotest",
+        "iteration": 0,
+        "command": [
+          "stdbuf",
+          "-oL",
+          "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+          "-l",
+          "24-31",
+          "--no-huge",
+          "-m",
+          "2048",
+          "--no-pci",
+          "--no-shconf",
+          "--no-telemetry"
+        ],
+        "started_unix": 1792656798.4277685,
+        "duration_seconds": 7.003,
+        "exit_status": 0,
+        "timed_out": false
+      }
+    ]
+  },
+  "rx_interrupt": {
+    "patched": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "7e6bc6e5ad4d51e6b13de92eb00a87de4a343f024e08911f395fa6dd10c48a43",
+      "results": [
+        {
+          "name": "event_eth_rx_intr_adapter_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "32-33",
+            "--no-huge",
+            "-m",
+            "4096",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=net_vhost0,iface=/tmp/cvm-dpdk-followup-20261022/rx-ipc.sock,queues=4"
+          ],
+          "started_unix": 1792656736.8956769,
+          "duration_seconds": 4.002,
+          "exit_status": 0,
+          "timed_out": false
+        }
+      ]
+    },
+    "pristine": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+      "sha256": "e4bc767d65870d13bece2574a0ec99bd09a7777e3ddf5b79e444a87e99d80451",
+      "results": [
+        {
+          "name": "event_eth_rx_intr_adapter_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+            "-l",
+            "32-33",
+            "--no-huge",
+            "-m",
+            "4096",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=net_vhost0,iface=/tmp/cvm-dpdk-followup-20261022/rx-pristine.sock,queues=4"
+          ],
+          "started_unix": 1792656930.9377952,
+          "duration_seconds": 3.002,
+          "exit_status": 0,
+          "timed_out": false
+        }
+      ]
+    },
+    "sandbox_binding_failure": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "7e6bc6e5ad4d51e6b13de92eb00a87de4a343f024e08911f395fa6dd10c48a43",
+      "results": [
+        {
+          "name": "event_eth_rx_intr_adapter_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "32-33",
+            "--no-huge",
+            "-m",
+            "4096",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=net_vhost0,iface=/tmp/cvm-dpdk-followup-20261022/rx.sock,queues=4"
+          ],
+          "started_unix": 1792656714.6346889,
+          "duration_seconds": 5.002,
+          "exit_status": 255,
+          "timed_out": false
+        }
+      ]
+    }
+  },
+  "ipsec_perf": {
+    "before_patched": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "7e6bc6e5ad4d51e6b13de92eb00a87de4a343f024e08911f395fa6dd10c48a43",
+      "results": [
+        {
+          "name": "ipsec_perf_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "34-35",
+            "--no-huge",
+            "-m",
+            "2048",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=crypto_openssl0"
+          ],
+          "started_unix": 1792656738.1363945,
+          "duration_seconds": 1.001,
+          "exit_status": 1,
+          "timed_out": false
+        }
+      ]
+    },
+    "before_pristine": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+      "sha256": "e4bc767d65870d13bece2574a0ec99bd09a7777e3ddf5b79e444a87e99d80451",
+      "results": [
+        {
+          "name": "ipsec_perf_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/pristine-build/app/dpdk-test",
+            "-l",
+            "28-31",
+            "--no-huge",
+            "-m",
+            "2048",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=crypto_openssl0"
+          ],
+          "started_unix": 1792656793.613261,
+          "duration_seconds": 1.002,
+          "exit_status": 1,
+          "timed_out": false
+        }
+      ]
+    },
+    "after": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "5afa6896f88f55a2ac97a3ad897052e4fc2749b15c03a42eda3409c867948ea0",
+      "results": [
+        {
+          "name": "ipsec_perf_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "24-27",
+            "--no-huge",
+            "-m",
+            "2048",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=crypto_openssl0"
+          ],
+          "started_unix": 1792656928.4230025,
+          "duration_seconds": 41.007,
+          "exit_status": 0,
+          "timed_out": false
+        }
+      ]
+    },
+    "unsupported_device": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "6a8a3dbecb9b3624196ebd801b8fe8733c703913a453a740afd8bfb2ee88bc92",
+      "results": [
+        {
+          "name": "ipsec_perf_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "28-31",
+            "--no-huge",
+            "-m",
+            "2048",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry",
+            "--vdev=crypto_null0"
+          ],
+          "started_unix": 1792657096.468182,
+          "duration_seconds": 1.002,
+          "exit_status": 255,
+          "timed_out": false
+        }
+      ]
+    },
+    "no_device": {
+      "binary": "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+      "sha256": "6a8a3dbecb9b3624196ebd801b8fe8733c703913a453a740afd8bfb2ee88bc92",
+      "results": [
+        {
+          "name": "ipsec_perf_autotest",
+          "iteration": 0,
+          "command": [
+            "stdbuf",
+            "-oL",
+            "/tmp/cvm-dpdk-followup-20261022/build/app/dpdk-test",
+            "-l",
+            "28-31",
+            "--no-huge",
+            "-m",
+            "2048",
+            "--no-pci",
+            "--no-shconf",
+            "--no-telemetry"
+          ],
+          "started_unix": 1792657097.5322835,
+          "duration_seconds": 1.002,
+          "exit_status": 77,
+          "timed_out": false
+        }
+      ]
+    },
+    "backtrace": "NULL packet-function call in create_traffic; session_prepare rejected NULL crypto.ses but fixture ignored the error"
+  },
+  "pristine_source_verification": {
+    "archive_sha256": "3719acc586b310c4f60ba230683bf4f1e12c6f2f5bee11f7c01b1bbd0ded7490",
+    "regular_files_compared": 6953,
+    "differences": []
+  },
+  "production_regressions": {
+    "exit_status": 0,
+    "checks_passed": 48
+  },
+  "scope": [
+    "Targeted software tests, not a new full upstream suite",
+    "Existing unsupported crypto subcases remain skipped",
+    "Vhost interrupt queue control path only; no guest traffic or physical interrupts",
+    "IPsec performance deliberately bypasses encryption",
+    "Initial diagnostic collector used stdbuf; it reported signal-11 termination as exit 1. GDB independently confirmed SIGSEGV.",
+    "Shared host and concurrent tests; timing is not a performance comparison"
+  ],
+  "build_options": {
+    "default_library": "static",
+    "enable_apps": "test,test-pmd",
+    "enable_drivers": "bus/*,common/mlx5,net/mlx5,net/null,net/ring,net/pcap,net/tap,net/vhost,net/virtio,mempool/ring,event/sw,event/dsw,event/skeleton,dma/skeleton,raw/skeleton,crypto/null,crypto/openssl,crypto/ipsec_mb,crypto/scheduler,compress/zlib,net/bonding",
+    "platform": "generic",
+    "tests": true
+  }
+}

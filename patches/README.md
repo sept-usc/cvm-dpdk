@@ -63,6 +63,7 @@ that differs from the recorded release is rejected before any changes.
 | 0011 | Select EFD AVX2 lookup only when its implementation was compiled | Upstream audit follow-up, 2026-10-21 |
 | 0012 | Reject missing security session-size callbacks; repair IPsec test fixture and add a rejection regression | Upstream audit follow-up, 2026-10-21 |
 | 0013 | Correct BPF no-huge/ASan metadata and report a disabled crypto scheduler explicitly | Upstream test setup fixes, 2026-10-21 |
+| 0014 | Create valid IPsec benchmark sessions, check preparation failures and release session/SA resources | Extended upstream tests, 2026-10-22 |
 
 Patch 0006 folds intermediate experiments and reversions into the tested final
 state. It was recovered on 2026-10-20 by reading the powered-off CVM disk and
@@ -80,6 +81,7 @@ Their implementation is unchanged.
 | Official release, through 0011 | `874701773735b7b90214eab6841896eedc312947` |
 | Official release, through 0012 | `138e9168feac7091f8ea8f90da95554b7480113c` |
 | Official release, through 0013 | `54139e1ff627b06e438ea14ca0a8750168314735` |
+| Official release, through 0014 | `b2860235e5abd41775032e82876ec21c477b9c7c` |
 | Archived CVM import | `d09d6d6f46cef3d6234ba7f11ee7e187e0ca4e02` |
 | Conservative baseline, through 0006 | `6dc438c1e5f09ee298ef7d84f1f490e19f96b352` |
 | Private bridge, through 0007 | `2b6019b4092fc728203063b0a05fa3ae899d0838` |
@@ -88,6 +90,7 @@ Their implementation is unchanged.
 | EFD generic-build dispatch fix, through 0011 | `1dbb76f412f4cf159acc86951a970515daf2bc16` |
 | Security session-size validation, through 0012 | `a99e55096ffddbfce7687e6c7a2355e4f990770a` |
 | Test registration metadata, through 0013 | `92d30365612504a53394ac6d3de15c854c7b8d09` |
+| IPsec performance sessions, through 0014 | `02c3374df711bf75e3eb456a613b41afbd11d764` |
 
 The tree through 0008 corresponds to the archived receiver implementation.
 Patches 0009 and 0010 extend that implementation; the earlier patches remain

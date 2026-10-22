@@ -1,0 +1,165 @@
+From b92393058828b74139ee38d84172471db0f08100 Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 01:18:59 -0700
+Subject: [PATCH] test/ipsec: create valid sessions for prepare and process
+ benchmark
+
+---
+ app/test/test_ipsec_perf.c | 75 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 60 insertions(+), 15 deletions(-)
+
+diff --git a/app/test/test_ipsec_perf.c b/app/test/test_ipsec_perf.c
+index a32a208..9379561 100644
+--- a/app/test/test_ipsec_perf.c
++++ b/app/test/test_ipsec_perf.c
+@@ -39,6 +39,10 @@ struct ipsec_test_cfg {
+ };
+ 
+ struct rte_mempool *mbuf_pool, *cop_pool;
++static struct rte_mempool *session_pool;
++/* Fixed synthetic keys: crypto execution is outside this benchmark. */
++static uint8_t cipher_key[16];
++static uint8_t auth_key[20];
+ 
+ struct stats_counter {
+ 	uint64_t nb_prepare_call;
+@@ -181,6 +185,10 @@ fill_ipsec_param(struct ipsec_sa *sa)
+ 		sa->aead_xform.aead.digest_length = aead_algo->digest_len;
+ 		sa->aead_xform.aead.iv.offset = IV_OFFSET;
+ 		sa->aead_xform.aead.iv.length = 12;
++		sa->aead_xform.aead.key.data = cipher_key;
++		sa->aead_xform.aead.key.length = sizeof(cipher_key);
++		sa->aead_xform.aead.aad_length =
++			sa->ipsec_xform.options.esn ? 12 : 8;
+ 
+ 		if (sa->ipsec_xform.direction ==
+ 				RTE_SECURITY_IPSEC_SA_DIR_INGRESS) {
+@@ -194,10 +202,14 @@ fill_ipsec_param(struct ipsec_sa *sa)
+ 		sa->cipher_xform.type = RTE_CRYPTO_SYM_XFORM_CIPHER;
+ 		sa->cipher_xform.cipher.algo = cipher_algo->algo;
+ 		sa->cipher_xform.cipher.iv.offset = IV_OFFSET;
+-		sa->cipher_xform.cipher.iv.length = 12;
++		sa->cipher_xform.cipher.iv.length = cipher_algo->iv_len;
++		sa->cipher_xform.cipher.key.data = cipher_key;
++		sa->cipher_xform.cipher.key.length = sizeof(cipher_key);
+ 		sa->auth_xform.type = RTE_CRYPTO_SYM_XFORM_AUTH;
+ 		sa->auth_xform.auth.algo = auth_algo->algo;
+ 		sa->auth_xform.auth.digest_length = auth_algo->digest_len;
++		sa->auth_xform.auth.key.data = auth_key;
++		sa->auth_xform.auth.key.length = sizeof(auth_key);
+ 
+ 
+ 		if (sa->ipsec_xform.direction ==
+@@ -223,13 +235,25 @@ fill_ipsec_param(struct ipsec_sa *sa)
+ 	return TEST_SUCCESS;
+ }
+ 
++static void
++destroy_sa(struct ipsec_sa *sa)
++{
++	if (sa->ss[0].crypto.ses != NULL) {
++		rte_cryptodev_sym_session_free(0, sa->ss[0].crypto.ses);
++		sa->ss[0].crypto.ses = NULL;
++	}
++	if (sa->ss[0].sa != NULL) {
++		rte_ipsec_sa_fini(sa->ss[0].sa);
++		rte_free(sa->ss[0].sa);
++		sa->ss[0].sa = NULL;
++	}
++}
++
+ static int
+ create_sa(enum rte_security_session_action_type action_type,
+ 	  struct ipsec_sa *sa)
+ {
+-	void *dummy_ses = NULL;
+-	size_t sz;
+-	int rc;
++	int sz, rc;
+ 
+ 	memset(&sa->ss[0], 0, sizeof(sa->ss[0]));
+ 
+@@ -247,17 +271,29 @@ create_sa(enum rte_security_session_action_type action_type,
+ 		"failed to allocate memory for rte_ipsec_sa\n");
+ 
+ 	sa->ss[0].type = action_type;
+-	sa->ss[0].crypto.ses = dummy_ses;
++	/* Session setup is outside the timed prepare/process loops. */
++	sa->ss[0].crypto.ses = rte_cryptodev_sym_session_create(0,
++			sa->crypto_xforms, session_pool);
++	if (sa->ss[0].crypto.ses == NULL) {
++		printf("failed to create crypto session\n");
++		goto fail;
++	}
+ 
+ 	rc = rte_ipsec_sa_init(sa->ss[0].sa, &sa->sa_prm, sz);
+-	rc = (rc > 0 && (uint32_t)rc <= sz) ? 0 : -EINVAL;
++	if (rc <= 0 || rc > sz)
++		goto fail;
+ 
+-	if (rc == 0)
+-		rc = rte_ipsec_session_prepare(&sa->ss[0]);
+-	else
+-		return TEST_FAILED;
++	rc = rte_ipsec_session_prepare(&sa->ss[0]);
++	if (rc != 0) {
++		printf("rte_ipsec_session_prepare() failed: %d\n", rc);
++		goto fail;
++	}
+ 
+ 	return TEST_SUCCESS;
++
++fail:
++	destroy_sa(sa);
++	return TEST_FAILED;
+ }
+ 
+ static int
+@@ -450,6 +486,14 @@ testsuite_setup(void)
+ 	struct rte_mbuf *mbuf;
+ 	int i;
+ 
++	session_pool = rte_cryptodev_sym_session_pool_create("IPSEC_PERF_SESSIONS",
++			2, rte_cryptodev_sym_get_private_session_size(0),
++			0, 0, rte_socket_id());
++	if (session_pool == NULL) {
++		RTE_LOG(ERR, USER1, "Can't create SESSION_POOL\n");
++		return TEST_FAILED;
++	}
++
+ 	mbuf_pool = rte_pktmbuf_pool_create("IPSEC_PERF_MBUFPOOL",
+ 			NUM_MBUFS, MBUF_CACHE_SIZE, 0, MBUF_SIZE,
+ 			rte_socket_id());
+@@ -564,6 +608,8 @@ print_metrics(const struct ipsec_test_cfg *test_cfg,
+ static void
+ testsuite_teardown(void)
+ {
++	rte_mempool_free(session_pool);
++	session_pool = NULL;
+ 	if (mbuf_pool != NULL) {
+ 		RTE_LOG(DEBUG, USER1, "MBUFPOOL count %u\n",
+ 		rte_mempool_avail_count(mbuf_pool));
+@@ -611,16 +657,15 @@ test_libipsec_perf(void)
+ 	for (i = 0; i < RTE_DIM(test_cfg) ; i++) {
+ 
+ 		ret = init_sa_session(&test_cfg[i], &sa_out, &sa_in);
++		if (ret == 0)
++			ret = measure_performance(&sa_out, &sa_in);
++		destroy_sa(&sa_out);
++		destroy_sa(&sa_in);
+ 		if (ret != 0) {
+ 			testsuite_teardown();
+ 			return TEST_FAILED;
+ 		}
+ 
+-		if (measure_performance(&sa_out, &sa_in) < 0) {
+-			testsuite_teardown();
+-			return TEST_FAILED;
+-		}
+-
+ 		print_metrics(&test_cfg[i], &sa_out, &sa_in);
+ 	}
+ 
+-- 
+2.51.0
+
