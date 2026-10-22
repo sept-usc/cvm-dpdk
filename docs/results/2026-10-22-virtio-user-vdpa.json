@@ -2168,6 +2168,41 @@
       "passed": true
     }
   },
-  "github_ci": "pending for this code checkpoint",
+  "github_ci": {
+    "commit": "5aa81bd6d22f65c349093ece175ebfc0edf92eb4",
+    "workflows": [
+      {
+        "name": "DPDK integration",
+        "run_id": 39771432632,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432632"
+      },
+      {
+        "name": "DPDK extended software tests",
+        "run_id": 39771432627,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432627"
+      },
+      {
+        "name": "Portable checks",
+        "run_id": 39771432595,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432595"
+      },
+      {
+        "name": "DPDK ARM64 emulation",
+        "run_id": 39771432589,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432589"
+      },
+      {
+        "name": "DPDK virtio crypto guests",
+        "run_id": 39771432577,
+        "conclusion": "success",
+        "url": "https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432577"
+      }
+    ],
+    "virtio_profile": "Full eight-case invocation; all passed on the hosted runner"
+  },
   "raw_evidence_root": "/tmp/cvm-dpdk-followup-20261022"
 }

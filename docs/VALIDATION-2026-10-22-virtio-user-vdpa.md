@@ -11,6 +11,8 @@ the original RSA command passes all three subcases. Seven maintained cases
 passed in the full local invocation. The RSA guard initially selected an
 unsupported exponent key format; after correcting the fixture to the advertised
 CRT format, that case passed separately. The record retains both outcomes.
+The [hosted workflow at `5aa81bd`](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432577)
+then passed all eight cases in a single invocation.
 
 ## Failures and fixes
 

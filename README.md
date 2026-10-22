@@ -83,7 +83,7 @@ are in the [tested configuration](docs/REPRODUCING.md#recorded-hardware-configur
 |---|---|
 | Shared memory and NIC DMA | Six module checks and a byte-level macswap round trip passed |
 | [Production-code regressions](tests/dpdk/README.md) | 48 checks covering CQE mutation, buffer ownership and forwarding passed |
-| [Upstream test status](docs/UPSTREAM-TEST-STATUS.md) | 42 DPDK commands across native, ARM64 and PCI virtio profiles pass in CI; the ledger tracks later results and remaining prerequisites against the original 246-entry audit |
+| [Upstream test status](docs/UPSTREAM-TEST-STATUS.md) | 44 DPDK commands across native, ARM64, PCI virtio and vDPA profiles pass in CI; the ledger tracks later results and remaining prerequisites against the original 246-entry audit |
 | [Raw receive, before the private bridge](docs/VALIDATION-2026-09-24.md) | 40 GiB synthetic stream: **94.680 Gbit/s UDP payload**, no authentication |
 | [Authenticated private-object transfer](docs/VALIDATION-2026-10-20-feature-coverage.md) | 512 MiB synthetic object: **3.596 s / 1.194 Gbit/s**, exact SHA-256, zero retransmissions; one queue/core |
 

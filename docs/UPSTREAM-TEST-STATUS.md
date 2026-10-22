@@ -25,19 +25,19 @@ original failure to a passing record and lists every remaining command.
 | Virtio-user crypto | Patches 0018–0023 repair startup, queue addresses/notifications, reset, IOMMU backend setup and RSA buffer staging. Both original commands pass through guest vhost-vDPA with a separate QEMU companion fix. [Report](VALIDATION-2026-10-22-virtio-user-vdpa.md) |
 | Timer repeatability | Six further runs pass 31/31 subcases. No timer code or deadline was changed; the earlier timing failure remains unexplained. [Report](VALIDATION-2026-10-22-timer-followup.md) |
 
-The last hosted code checkpoint, `0b0c2c0`, passed all five workflows:
-[portable checks](https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583399),
-[DPDK integration](https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583428),
-[extended software tests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583437),
-[ARM64 emulation](https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583248),
-and [PCI virtio guests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39764583525).
-Those profiles cover 42 distinct upstream commands: 39 native, one ARM64 and
-two PCI virtio commands under emulation, alongside 48 production-code
-regressions, two testpmd forwarding checks and dedicated virtio error checks.
-The extended vDPA profile adds two original commands and two more error-path
-checks; its hosted run is pending. The long mempool profile and hardware
-qualification remain separate. The complete 23-patch series reapplies to both
-recorded baselines; native and ASan/UBSan production regressions each pass 48 checks.
+The code checkpoint `5aa81bd` passed all five hosted workflows:
+[portable checks](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432595),
+[DPDK integration](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432632),
+[extended software tests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432627),
+[ARM64 emulation](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432589),
+and [PCI/vDPA virtio guests](https://github.com/sept-usc/cvm-dpdk/actions/runs/39771432577).
+Those profiles cover 44 distinct upstream commands: 39 native, one ARM64 and
+four PCI/virtio-user crypto commands under emulation. They also exercise 48
+production-code regressions, two testpmd forwarding checks and four dedicated
+virtio error checks. The hosted virtio runner passed all eight cases in one
+invocation. The long mempool profile and hardware qualification remain separate.
+The complete 23-patch series reapplies to both recorded baselines; native and
+ASan/UBSan production regressions each pass 48 checks.
 
 ## Remaining work and required environments
 
