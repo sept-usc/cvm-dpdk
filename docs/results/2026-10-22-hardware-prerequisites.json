@@ -47,5 +47,10 @@
   "armv8_crypto": {
     "native_host": "x86_64; not ARMv8 hardware",
     "emulated_functional_pass": "2026-10-22-arm64-emulation.json"
+  },
+  "virtio_pci_crypto": {
+    "functional_emulation_pass": "2026-10-22-virtio-crypto.json",
+    "backend": "DPDK OpenSSL vhost-crypto, separate symmetric/asymmetric profiles",
+    "does_not_supply_vhost_vdpa": true
   }
 }

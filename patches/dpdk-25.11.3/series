@@ -13,3 +13,5 @@
 0013-test-registration-metadata.patch
 0014-ipsec-perf-valid-sessions.patch
 0015-testpmd-non-numa-forwarding-pool.patch
+0016-virtio-crypto-probe-cleanup.patch
+0017-virtio-crypto-session-error.patch

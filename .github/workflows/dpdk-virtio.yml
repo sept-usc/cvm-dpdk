@@ -1,0 +1,63 @@
+name: DPDK virtio crypto guests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  virtio:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build and emulation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential meson ninja-build pkg-config libnuma-dev libssl-dev python3-pyelftools qemu-system-x86 busybox-static zstd
+      - name: Unpack a matching guest kernel and UIO modules
+        run: |
+          virtio_kernel_version=$(apt-cache depends linux-image-generic | awk '/Depends: linux-image-[0-9]/{sub("linux-image-", "", $2); print $2; exit}')
+          test -n "$virtio_kernel_version"
+          mkdir "$RUNNER_TEMP/virtio-packages" "$RUNNER_TEMP/virtio-kernel"
+          cd "$RUNNER_TEMP/virtio-packages"
+          apt-get download "linux-image-$virtio_kernel_version" "linux-modules-$virtio_kernel_version" "linux-modules-extra-$virtio_kernel_version"
+          for package in *.deb; do dpkg-deb -x "$package" "$RUNNER_TEMP/virtio-kernel"; done
+          echo "VIRTIO_GUEST_KERNEL=$RUNNER_TEMP/virtio-kernel/boot/vmlinuz-$virtio_kernel_version" >> "$GITHUB_ENV"
+          virtio_modules_dir=$(dirname "$(find "$RUNNER_TEMP/virtio-kernel" -name 'uio_pci_generic.ko*' -print -quit)")
+          test "$virtio_modules_dir" != .
+          echo "VIRTIO_GUEST_MODULES=$virtio_modules_dir" >> "$GITHUB_ENV"
+      - name: Verify release and apply the full patch series
+        run: |
+          curl --fail --location --retry 3 https://fast.dpdk.org/rel/dpdk-25.11.3.tar.xz -o "$RUNNER_TEMP/dpdk.tar.xz"
+          echo "$(cat patches/dpdk-25.11.3/RELEASE_SHA256)  $RUNNER_TEMP/dpdk.tar.xz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/dpdk"
+          tar -xf "$RUNNER_TEMP/dpdk.tar.xz" -C "$RUNNER_TEMP/dpdk" --strip-components=1
+          git -C "$RUNNER_TEMP/dpdk" init
+          git -C "$RUNNER_TEMP/dpdk" config user.name 'keke1022'
+          git -C "$RUNNER_TEMP/dpdk" config user.email 'keke83space@gmail.com'
+          git -C "$RUNNER_TEMP/dpdk" add -f .
+          git -C "$RUNNER_TEMP/dpdk" commit -m 'Import verified DPDK 25.11.3 release'
+          bash scripts/apply-dpdk-patches.sh "$RUNNER_TEMP/dpdk"
+      - name: Build virtio frontend and OpenSSL vhost backend
+        run: |
+          meson setup "$RUNNER_TEMP/dpdk-build" "$RUNNER_TEMP/dpdk" \
+            -Dtests=true -Ddefault_library=static -Dplatform=generic \
+            '-Denable_drivers=bus/*,mempool/ring,crypto/virtio,crypto/openssl' \
+            -Denable_apps=test -Dexamples=vhost_crypto
+          ninja -C "$RUNNER_TEMP/dpdk-build" -j 2
+      - name: Probe cleanup, session rejection, symmetric crypto and RSA
+        run: |
+          python3 scripts/test-dpdk-virtio.py "$RUNNER_TEMP/dpdk-build" \
+            --kernel "$VIRTIO_GUEST_KERNEL" --modules "$VIRTIO_GUEST_MODULES"
+      - name: Retain guest and backend diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dpdk-virtio-crypto-logs
+          path: |
+            ${{ runner.temp }}/dpdk-build/meson-logs/
+            ${{ runner.temp }}/dpdk-build/cvm-dpdk-virtio-tests/*.log
+            ${{ runner.temp }}/dpdk-build/cvm-dpdk-virtio-tests/results.json

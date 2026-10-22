@@ -65,6 +65,8 @@ that differs from the recorded release is rejected before any changes.
 | 0013 | Correct BPF no-huge/ASan metadata and report a disabled crypto scheduler explicitly | Upstream test setup fixes, 2026-10-21 |
 | 0014 | Create valid IPsec benchmark sessions, check preparation failures and release session/SA resources | Extended upstream tests, 2026-10-22 |
 | 0015 | Select the non-NUMA forwarding pool before resolving its private peer | Testpmd CLI regression, 2026-10-22 |
+| 0016 | Release the cryptodev and PCI mappings after failed virtio-crypto probe | Isolated guest error-path regression, 2026-10-22 |
+| 0017 | Return an error when the virtio backend rejects a symmetric session | Backend rejection, pool recovery and supported-session control |
 
 Patch 0006 folds intermediate experiments and reversions into the tested final
 state. It was recovered on 2026-10-20 by reading the powered-off CVM disk and
@@ -84,6 +86,8 @@ Their implementation is unchanged.
 | Official release, through 0013 | `54139e1ff627b06e438ea14ca0a8750168314735` |
 | Official release, through 0014 | `b2860235e5abd41775032e82876ec21c477b9c7c` |
 | Official release, through 0015 | `7f67782d633d0cfae4b5416078b84b7e483a9b92` |
+| Official release, through 0016 | `2644fc372df079b4894dd818465eee82743f2f8f` |
+| Official release, through 0017 | `671597eb6070ffecae8d44077408f684122c98df` |
 | Archived CVM import | `d09d6d6f46cef3d6234ba7f11ee7e187e0ca4e02` |
 | Conservative baseline, through 0006 | `6dc438c1e5f09ee298ef7d84f1f490e19f96b352` |
 | Private bridge, through 0007 | `2b6019b4092fc728203063b0a05fa3ae899d0838` |
@@ -94,6 +98,8 @@ Their implementation is unchanged.
 | Test registration metadata, through 0013 | `92d30365612504a53394ac6d3de15c854c7b8d09` |
 | IPsec performance sessions, through 0014 | `02c3374df711bf75e3eb456a613b41afbd11d764` |
 | Non-NUMA forwarding pool, through 0015 | `b0f716046d79ea645de74af7f966c52b4170dd75` |
+| Virtio-crypto probe cleanup, through 0016 | `67a4cccbf68e6424f4eec9560442df58091f10db` |
+| Virtio-crypto session errors, through 0017 | `8b61c7fb0ed0917f1d13b37f6a1af666d775e7eb` |
 
 The tree through 0008 corresponds to the archived receiver implementation.
 Patches 0009 and 0010 extend that implementation; the earlier patches remain

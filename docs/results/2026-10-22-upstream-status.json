@@ -2,8 +2,8 @@
   "basis": "Cross-configuration reconciliation of recorded evidence, NOT a new full-suite run or a claim that each configuration passes",
   "counts": {
     "original_entries": 246,
-    "entries_with_recorded_pass": 210,
-    "entries_without_recorded_pass": 36,
+    "entries_with_recorded_pass": 212,
+    "entries_without_recorded_pass": 34,
     "original_failures_with_recorded_pass": 25
   },
   "resolved_original_failures": [
@@ -276,12 +276,6 @@
       "prerequisite": "UADK libraries and a supported accelerator; no UACCE class is exposed on this host"
     },
     {
-      "name": "cryptodev_virtio_autotest",
-      "original_result": "SKIP",
-      "status": "no_recorded_pass",
-      "prerequisite": "A configured virtio-crypto device and compatible backend"
-    },
-    {
       "name": "cryptodev_virtio_user_autotest",
       "original_result": "SKIP",
       "status": "no_recorded_pass",
@@ -352,12 +346,6 @@
       "original_result": "SKIP",
       "status": "no_recorded_pass",
       "prerequisite": "A separately provisioned device/platform and its PMD test profile"
-    },
-    {
-      "name": "cryptodev_virtio_asym_autotest",
-      "original_result": "SKIP",
-      "status": "no_recorded_pass",
-      "prerequisite": "A configured virtio-crypto device and compatible backend"
     },
     {
       "name": "cryptodev_virtio_user_asym_autotest",

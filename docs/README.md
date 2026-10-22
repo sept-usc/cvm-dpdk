@@ -32,6 +32,7 @@ before the rename for traceability; current commands are in the guides above.
 | [2026-10-22 timer repeatability](VALIDATION-2026-10-22-timer-followup.md) | Six further 31/31 passes, corrected thread sampling, and unresolved failure attribution |
 | [2026-10-22 mempool long profile](VALIDATION-2026-10-22-mempool.md) | Unmodified benchmark results, memory controls, and retained incomplete attempts |
 | [2026-10-22 ARMv8 crypto emulation](VALIDATION-2026-10-22-arm64-emulation.md) | Cross-compilation, pinned crypto dependency, 19 supported subcases, and emulation limits |
+| [2026-10-22 virtio crypto](VALIDATION-2026-10-22-virtio-crypto.md) | Failed-probe cleanup, rejected-session errors, and original symmetric/RSA tests in isolated guests |
 | [Kernel issues and history](../kmod/ISSUES.md) | Allocation and lifetime behavior, design constraints, known gaps |
 
 ## Runnable experiments

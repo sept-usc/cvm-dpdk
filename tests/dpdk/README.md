@@ -116,6 +116,13 @@ For the ARMv8 crypto command on an x86 host, use the separate
 [ARM64 cross-build and QEMU profile](../../docs/VALIDATION-2026-10-22-arm64-emulation.md).
 Its functional result is recorded as emulation, not native ARM qualification.
 
+The [virtio crypto guest profile](../../docs/VALIDATION-2026-10-22-virtio-crypto.md)
+runs the original symmetric and RSA commands using an OpenSSL vhost backend,
+plus actual failed-probe and rejected-session regressions. It uses disposable
+QEMU TCG guests with an unpacked kernel and UIO modules; host device binding is
+not required. Build `crypto/virtio,crypto/openssl` and the `vhost_crypto` example
+for that separate profile.
+
 Apply the [complete patch series](../../patches/README.md), then build:
 
 ```sh

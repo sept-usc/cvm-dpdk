@@ -1,0 +1,43 @@
+From 0a76510944191d4a65c9afe5097458039b50f65d Mon Sep 17 00:00:00 2001
+From: keke1022 <keke83space@gmail.com>
+Date: Thu, 22 Oct 2026 03:05:57 -0700
+Subject: [PATCH] crypto/virtio: release device and PCI mappings on failed
+ probe
+
+---
+ drivers/crypto/virtio/virtio_cryptodev.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/crypto/virtio/virtio_cryptodev.c b/drivers/crypto/virtio/virtio_cryptodev.c
+index d706516..1b52809 100644
+--- a/drivers/crypto/virtio/virtio_cryptodev.c
++++ b/drivers/crypto/virtio/virtio_cryptodev.c
+@@ -571,6 +571,7 @@ crypto_virtio_create(const char *name, struct rte_pci_device *pci_dev,
+ 		struct rte_cryptodev_pmd_init_params *init_params)
+ {
+ 	struct rte_cryptodev *cryptodev;
++	int ret;
+ 
+ 	PMD_INIT_FUNC_TRACE();
+ 
+@@ -580,9 +581,14 @@ crypto_virtio_create(const char *name, struct rte_pci_device *pci_dev,
+ 		return -ENODEV;
+ 
+ 	cryptodev->driver_id = cryptodev_virtio_driver_id;
+-	if (crypto_virtio_dev_init(cryptodev, VIRTIO_CRYPTO_PMD_GUEST_FEATURES,
+-			pci_dev) < 0)
+-		return -1;
++	ret = crypto_virtio_dev_init(cryptodev,
++			VIRTIO_CRYPTO_PMD_GUEST_FEATURES, pci_dev);
++	if (ret < 0) {
++		/* Do not expose a partially initialized device after PCI cleanup. */
++		rte_cryptodev_pmd_destroy(cryptodev);
++		rte_pci_unmap_device(pci_dev);
++		return ret;
++	}
+ 
+ 	rte_cryptodev_pmd_probing_finish(cryptodev);
+ 
+-- 
+2.51.0
+
