@@ -64,7 +64,7 @@ when changing PMD validation logic.
 ## 2. Build the module and standalone hardware probes
 
 Copy the sources to a guest checkout if needed, using an explicit SSH
-destination: `./sync.sh user@guest:/path/to/snp-dpdk/`. The script copies
+destination: `./sync.sh user@guest:/path/to/cvm-dpdk/`. The script copies
 sources without deleting destination files and preserves guest build outputs.
 
 Inside the SNP guest, install the compiler, matching kernel build headers,
@@ -117,7 +117,7 @@ DPDK command names are `mlx5_rx_validate_autotest` and
 exercise RX budgets/completions and exact TX completion matching without
 injecting into real NIC queues.
 
-Run the new actual-PMD and forwarding-engine regressions from the SNPFlow
+Run the new actual-PMD and forwarding-engine regressions from the CVM-DPDK
 checkout:
 
 ```sh

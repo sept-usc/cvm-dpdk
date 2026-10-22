@@ -5,6 +5,11 @@ summary, and [REPRODUCING.md](REPRODUCING.md) for build and test commands.
 Dated reports describe the configuration tested on that date; later work can
 supersede their open questions.
 
+The project is now named CVM-DPDK and hosted at
+[sept-usc/cvm-dpdk](https://github.com/sept-usc/cvm-dpdk).
+Dated validation records retain original artifact paths and CI run URLs from
+before the rename for traceability; current commands are in the guides above.
+
 | Record | Contents |
 |---|---|
 | [2026-09-24 baseline](VALIDATION-2026-09-24.md) | Kernel checks, conservative PMD mode, externally accounted macswap, 40 GiB raw RX |

@@ -85,7 +85,7 @@ Code revision `09bc6e24f78081b0157de8eacd04eea1d40061e0` passed both
 and [DPDK integration](https://github.com/keke1022/snpflow/actions/runs/39576345533)
 on GitHub. The integration run includes all ten native commands, twelve BPF
 commands, the missing-scheduler check, existing production-code regressions,
-and existing ASan/UBSan regressions. The latter instrument SNPFlow's regression
+and existing ASan/UBSan regressions. The latter instrument CVM-DPDK's regression
 targets, not every upstream library or BPF test.
 
 This does not add RX interrupt support to `net_null`, configure host hugepages,

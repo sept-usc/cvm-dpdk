@@ -1,6 +1,6 @@
 # DPDK upstream test audit — 2026-10-21
 
-This audit runs DPDK 25.11.3's own tests, separately from SNPFlow's 48
+This audit runs DPDK 25.11.3's own tests, separately from CVM-DPDK's 48
 production-code regressions and two added mlx5 validation commands. The
 previous green CI results did not establish that the upstream suite passed.
 
@@ -89,7 +89,7 @@ An isolated `XDG_RUNTIME_DIR` allowed EAL and telemetry sockets without
 colliding with another DPDK process. Tests ran outside the restricted process
 sandbox because these upstream tests require local IPC.
 
-Meson registered 204 entries. Two are SNPFlow's added mlx5 commands, leaving
+Meson registered 204 entries. Two are CVM-DPDK's added mlx5 commands, leaving
 202 upstream entries. An additional 44 commands were present in the binary
 but omitted by Meson's no-hugepages selection. This includes BPF commands
 whose registration uses `NOHUGE_OK` rather than the literal `true` expected

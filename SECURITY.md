@@ -1,6 +1,6 @@
 # Security reporting
 
-SNPFlow is a research prototype. Its validation reports describe specific
+CVM-DPDK is a research prototype. Its validation reports describe specific
 tested configurations, not a general security certification or production
 support guarantee. Development currently follows `main`; there is no separate
 maintained stable-release branch or promised security-update schedule.
@@ -8,7 +8,7 @@ maintained stable-release branch or promised security-update schedule.
 ## Report a suspected vulnerability
 
 Email the maintainer at **keke83space@gmail.com** with the subject
-`[SNPFlow security] <short description>`. Please report privately before
+`[CVM-DPDK security] <short description>`. Please report privately before
 opening a public issue or pull request containing exploit details.
 
 Include the affected commit, component, reproduction steps or a minimal test,

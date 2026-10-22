@@ -9,7 +9,7 @@ fi
 
 build=$(realpath -- "$1")
 binary="$build/app/dpdk-test"
-logs="$build/snpflow-upstream-tests"
+logs="$build/cvm-dpdk-upstream-tests"
 mkdir -p -- "$logs"
 cpu=$(python3 -c 'import os; print(min(os.sched_getaffinity(0)))')
 tests=(efd_autotest efd_perf_autotest security_autotest ipsec_autotest)

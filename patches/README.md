@@ -17,7 +17,7 @@ The original CVM checkout imported the source as local root commit
 Unlike the official release, that import replaced `.gitignore` and included
 one generated `buildtools/__pycache__/coff.cpython-314.pyc` file. All other
 tracked files match the fully imported release. The historical bytecode is
-not distributed by SNPFlow and is not needed for new builds.
+not distributed by CVM-DPDK and is not needed for new builds.
 
 Verify the downloaded archive against `RELEASE_SHA256`. In a freshly extracted
 release directory, initialize and commit the entire tree **before building**:
@@ -58,8 +58,8 @@ that differs from the recorded release is rejected before any changes.
 | 0006 | Consolidated conservative mode, RX/TX tests, fail-stop handling, fd ownership, fail-closed allocation, UMEM alignment | Exact delta `fc1a57c..8a3a43b` |
 | 0007 | Synchronous private-mbuf bridge | `466d145` |
 | 0008 | Authenticated chunk receiver | `470dcb6` |
-| 0009 | Private CQE snapshots, guarded error/opcode handling, nonempty RX completions | SNPFlow correctness fix, 2026-10-20 |
-| 0010 | Private forwarding/GSO pools, strict buffer ownership, explicit unsupported-mode checks | SNPFlow coverage extension, 2026-10-20 |
+| 0009 | Private CQE snapshots, guarded error/opcode handling, nonempty RX completions | CVM-DPDK correctness fix, 2026-10-20 |
+| 0010 | Private forwarding/GSO pools, strict buffer ownership, explicit unsupported-mode checks | CVM-DPDK coverage extension, 2026-10-20 |
 | 0011 | Select EFD AVX2 lookup only when its implementation was compiled | Upstream audit follow-up, 2026-10-21 |
 | 0012 | Reject missing security session-size callbacks; repair IPsec test fixture and add a rejection regression | Upstream audit follow-up, 2026-10-21 |
 | 0013 | Correct BPF no-huge/ASan metadata and report a disabled crypto scheduler explicitly | Upstream test setup fixes, 2026-10-21 |
@@ -98,7 +98,7 @@ sender changes (one-second RTO and streaming source hash) live in
 The new regressions compile the actual PMD RX/TX source with deterministic
 mutation at the validation boundary, and link the actual testpmd engines to
 ring-backed Ethernet ports. Run them against a built tree with
-`python3 scripts/test-dpdk-integration.py /path/to/dpdk/build` from the SNPFlow
+`python3 scripts/test-dpdk-integration.py /path/to/dpdk/build` from the CVM-DPDK
 root. See [the test guide](../tests/dpdk/README.md) for coverage and limitations.
 
 Historical generators and early source snapshots are retained in

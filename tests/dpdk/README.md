@@ -5,7 +5,7 @@ kernel module, hugepages, root privileges, or SNP guest. They use actual DPDK
 mbufs, pools and forwarding functions; they do not model the PMD in a separate
 implementation.
 
-These are SNPFlow regressions, not the complete original DPDK test suite.
+These are CVM-DPDK regressions, not the complete original DPDK test suite.
 The separate [upstream test audit](../../docs/VALIDATION-2026-10-21-upstream-tests.md)
 records the original suite's passes, skips and failures, including comparisons
 against the unmodified release and supplemental SNP hugepage runs.
@@ -20,7 +20,7 @@ bash scripts/test-dpdk-upstream.sh /path/to/dpdk/build
 
 This runs four original upstream commands with a 600-second limit per
 command, no NIC or hugepages, and 2 GiB of memory. It records logs and exit
-statuses under the build's `snpflow-upstream-tests/` directory and fails on
+statuses under the build's `cvm-dpdk-upstream-tests/` directory and fails on
 skips as well as errors. This targeted group does not replace the full audit.
 
 For the CI software-device profile, also enable
@@ -43,7 +43,7 @@ check, not a hardware throughput measurement.
 The registration check runs twelve BPF cases through Meson and checks that
 a build with `crypto/scheduler` disabled reports that command as skipped
 (77), not unknown. This availability check is not a scheduler functional pass.
-Logs remain under `meson-logs/` and `snpflow-upstream-tests/` in the build.
+Logs remain under `meson-logs/` and `cvm-dpdk-upstream-tests/` in the build.
 
 See the [test setup validation](../../docs/VALIDATION-2026-10-21-test-setup.md)
 and [RX/PMD follow-up](../../docs/VALIDATION-2026-10-21-software-rx-pmd.md)
@@ -68,7 +68,7 @@ libibverbs-dev libssl-dev python3-pyelftools`. If the optional installed
 `libmtcr_ul.a` needs C++ symbols, add `-Dc_link_args=-lstdc++` to Meson.
 OpenSSL enables the `cvmchunk` engine and its integration case.
 
-From the SNPFlow root:
+From the CVM-DPDK root:
 
 ```sh
 make test-dpdk DPDK_BUILD=/path/to/dpdk/build

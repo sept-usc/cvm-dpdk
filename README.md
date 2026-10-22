@@ -1,11 +1,11 @@
-# SNPFlow
+# CVM-DPDK
 
 **Shared-memory DMA and authenticated object transfer for DPDK in AMD SEV-SNP VMs.**
 
-[![Portable checks](https://github.com/keke1022/snpflow/actions/workflows/ci.yml/badge.svg)](https://github.com/keke1022/snpflow/actions/workflows/ci.yml)
-[![DPDK integration](https://github.com/keke1022/snpflow/actions/workflows/dpdk.yml/badge.svg)](https://github.com/keke1022/snpflow/actions/workflows/dpdk.yml)
+[![Portable checks](https://github.com/sept-usc/cvm-dpdk/actions/workflows/ci.yml/badge.svg)](https://github.com/sept-usc/cvm-dpdk/actions/workflows/ci.yml)
+[![DPDK integration](https://github.com/sept-usc/cvm-dpdk/actions/workflows/dpdk.yml/badge.svg)](https://github.com/sept-usc/cvm-dpdk/actions/workflows/dpdk.yml)
 
-SNPFlow extends **DPDK 25.11.3's mlx5 driver and testpmd** so a passed-through
+CVM-DPDK extends **DPDK 25.11.3's mlx5 driver and testpmd** so a passed-through
 NIC can use explicitly shared guest memory for DMA while packet processing
 and authenticated object reassembly stay in private guest memory.
 
@@ -31,7 +31,7 @@ Blue = CPU access; orange = NIC DMA.*
 
 The CPU posts receive buffers through WQEs and updates the RQ doorbell record
 (1–2). The NIC reads those requests, writes packet data and reports completion
-(3–5); the CPU polls the CQ (6). SNPFlow places these DMA resources in shared
+(3–5); the CPU polls the CQ (6). CVM-DPDK places these DMA resources in shared
 guest memory, then validates private CQE snapshots and copies packets into
 private buffers. The private bridge and `cvmchunk` authentication are not shown.
 
@@ -62,8 +62,8 @@ and [hardware programming manual, §§6.1 and 7.4](https://network.nvidia.com/fi
 Run the portable checks on Debian/Ubuntu with Git 2.43 or newer:
 
 ```sh
-git clone https://github.com/keke1022/snpflow.git
-cd snpflow
+git clone https://github.com/sept-usc/cvm-dpdk.git
+cd cvm-dpdk
 sudo apt-get install build-essential pkg-config libssl-dev python3 python3-cryptography
 make test
 make check
@@ -100,7 +100,7 @@ memory is not implemented. See [configuration limits](docs/REPRODUCING.md#config
 
 ## Help and contributions
 
-Open an [issue](https://github.com/keke1022/snpflow/issues) for questions or
+Open an [issue](https://github.com/sept-usc/cvm-dpdk/issues) for questions or
 bugs. See [CONTRIBUTING.md](CONTRIBUTING.md) for development and local Git hooks,
 and [SECURITY.md](SECURITY.md) for private vulnerability reports.
 

@@ -4,12 +4,12 @@ The DPDK integration patches and archived implementation material contain
 changes to and excerpts from DPDK 25.11.3. The notices below are retained from
 the corresponding upstream source headers in imported baseline tree
 `d09d6d6f46cef3d6234ba7f11ee7e187e0ca4e02`. They identify the upstream material;
-they do not attribute SNPFlow's new code to those authors.
+they do not attribute CVM-DPDK's new code to those authors.
 
 The full [BSD-3-Clause conditions and disclaimer](LICENSES/BSD-3-Clause.txt)
 apply to this material. These notices supplement the original headers left
-in the DPDK tree when applying the patches. Original SNPFlow contributions
-are copyright 2026 SNPFlow contributors; component scopes are specified in
+in the DPDK tree when applying the patches. Original CVM-DPDK contributions
+are copyright 2026 CVM-DPDK contributors; component scopes are specified in
 [LICENSING.md](LICENSING.md).
 
 The GPL-2.0 and BSD-3-Clause license texts in `LICENSES/` were copied verbatim

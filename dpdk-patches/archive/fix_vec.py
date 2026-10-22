@@ -48,7 +48,7 @@ mlx5_rx_cqe_cnt_valid(uint32_t cqe_cnt, uint32_t cq_entries)
 /**
  * 校验一段压缩 CQE 声明的 mini-CQE 数量。
  *
- * 逻辑已由 snp-dpdk/bounds-test.c 的用例覆盖（环尾、32 位截断、
+ * 逻辑已由 cvm-dpdk/bounds-test.c 的用例覆盖（环尾、32 位截断、
  * 链式累计、容量为零）。
  *
  * @param raw

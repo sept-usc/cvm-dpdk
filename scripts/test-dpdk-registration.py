@@ -36,16 +36,16 @@ def main():
     cpu = str(min(os.sched_getaffinity(0)))
     subprocess.run([
         "meson", "test", "-C", str(build), "--no-rebuild", "--num-processes", "1",
-        "--logbase=snpflow-registration-bpf",
+        "--logbase=cvm-dpdk-registration-bpf",
         f"--test-args=-l {cpu} --no-pci --no-shconf --no-telemetry", *BPF_TESTS,
     ], env=env, check=True)
     results = [json.loads(line) for line in
-               (build / "meson-logs/snpflow-registration-bpf.json").read_text().splitlines()]
+               (build / "meson-logs/cvm-dpdk-registration-bpf.json").read_text().splitlines()]
     outcomes = {row["name"].rsplit(" / ", 1)[-1]: row["result"] for row in results}
     if set(outcomes) != set(BPF_TESTS) or any(value != "OK" for value in outcomes.values()):
         raise SystemExit(f"Expected all twelve BPF commands to pass, got: {outcomes}")
 
-    logs = build / "snpflow-upstream-tests"
+    logs = build / "cvm-dpdk-upstream-tests"
     logs.mkdir(exist_ok=True)
     command = [str(build / "app/dpdk-test"), "-l", cpu, "--no-huge", "-m", "256",
                "--no-pci", "--no-shconf", "--no-telemetry"]

@@ -89,10 +89,10 @@ DPDK: 挂钩覆盖两处 —— mempool（mbuf）+ DevX 队列内存（CQ/WQ/doo
 ## 复现
 
 ```bash
-./sync.sh cvm26:~/snp-dpdk/
-ssh cvm26 'cd ~/snp-dpdk && make'
-ssh cvm26 'cd ~/snp-dpdk && sudo ./snp-probe [字节数]'   # verbs 路径，默认 64MB
-ssh cvm26 'cd ~/snp-dpdk && sudo ./devx-probe [字节数]'  # DevX 路径，默认 256KB
+./sync.sh cvm26:~/cvm-dpdk/
+ssh cvm26 'cd ~/cvm-dpdk && make'
+ssh cvm26 'cd ~/cvm-dpdk && sudo ./snp-probe [字节数]'   # verbs 路径，默认 64MB
+ssh cvm26 'cd ~/cvm-dpdk && sudo ./devx-probe [字节数]'  # DevX 路径，默认 256KB
 ```
 
 需要 root：`/dev/dma_heap/system` 是 root-only，raw packet QP 需 CAP_NET_RAW。

@@ -69,7 +69,7 @@ No inline-security assertions were removed or reclassified as skips.
 The complete twelve-patch series was reapplied from both recorded clean
 baselines. Both resulting tree hashes match the updated manifests. The full
 host build, including testpmd and the examples, succeeded, and the existing
-48 SNPFlow production-code regressions passed.
+48 CVM-DPDK production-code regressions passed.
 
 CI now enables `crypto/null` and runs four upstream commands: `efd_autotest`,
 `efd_perf_autotest`, `security_autotest`, and `ipsec_autotest`. The exact CI

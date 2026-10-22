@@ -15,7 +15,7 @@ SCRIPT = ROOT / "scripts/git-hooks.py"
 
 class HooksTest(unittest.TestCase):
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix="snpflow-hook-test-")
+        self.temp = tempfile.TemporaryDirectory(prefix="cvm-dpdk-hook-test-")
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name) / "repo"
         self.repo.mkdir()
@@ -199,7 +199,7 @@ class HooksTest(unittest.TestCase):
         self.write("Makefile", b"test:\n\t@false\ncheck:\n\t@true\n")
         self.git("commit", "-qm", "test: failing snapshot")
         self.assert_blocked(self.hook("pre-push", data=self.push_input(self.git("rev-parse", "HEAD"))),
-                            "SNPFlow hook failed")
+                            "CVM-DPDK hook failed")
 
     def test_push_delete_and_empty_input(self):
         self.assert_pass(self.hook("pre-push", data=""))
@@ -222,7 +222,7 @@ class HooksTest(unittest.TestCase):
         remote = Path(self.temp.name) / "remote.git"
         self.git("init", "--bare", "-q", str(remote))
         self.assert_blocked(self.run_command(["git", "push", str(remote), "HEAD:refs/heads/main"]),
-                            "SNPFlow hook failed")
+                            "CVM-DPDK hook failed")
         self.assertNotEqual(self.run_command(["git", "--git-dir", str(remote),
                                              "rev-parse", "--verify", "refs/heads/main"]).returncode, 0)
 

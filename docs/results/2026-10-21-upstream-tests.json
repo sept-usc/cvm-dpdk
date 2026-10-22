@@ -6030,7 +6030,7 @@
     "Enabled build only, not all upstream drivers/components",
     "No xbuf allocation, private bridge, or NIC DMA exercised in these native tests",
     "Not a controlled performance comparison",
-    "Two SNPFlow mlx5 validation commands excluded from upstream counts"
+    "Two CVM-DPDK mlx5 validation commands excluded from upstream counts"
   ],
   "software_initial_results": [
     {

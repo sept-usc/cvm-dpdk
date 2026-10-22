@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run SNPFlow regressions against a built DPDK tree (no NIC/root required).
+"""Run CVM-DPDK regressions against a built DPDK tree (no NIC/root required).
 
 Reuse Meson's compiler/linker commands so these tests exercise the shipped
 DPDK code and its real mbufs, mempools and forwarding engines. PMD tests
@@ -31,7 +31,7 @@ def main():
     suffix = "-asan" if args.sanitize else ""
     if args.pmd_source:
         suffix += "-alternate"
-    output = build / ("snpflow-tests" + suffix)
+    output = build / ("cvm-dpdk-tests" + suffix)
     output.mkdir(exist_ok=True)
     database = json.loads((build / "compile_commands.json").read_text())
 
@@ -75,7 +75,7 @@ def main():
             old_obj = old_obj[old_obj.index("-o") + 1]
             symbols = run(["nm", "-g", "--defined-only", old_obj],
                           capture_output=True, text=True).stdout.splitlines()
-            defines = [f"-D{line.split()[-1]}=snpflow_test_{line.split()[-1]}"
+            defines = [f"-D{line.split()[-1]}=cvm_dpdk_test_{line.split()[-1]}"
                        for line in symbols if len(line.split()) == 3]
             if args.pmd_source:
                 defines.insert(0, "-I" + str(args.pmd_source.resolve() / "drivers/net/mlx5"))
@@ -88,7 +88,7 @@ def main():
             original = shlex.split(template["command"])
             original = original[original.index("-o") + 1]
             renamed = output / "testpmd-main.o"
-            run(["objcopy", "--redefine-sym", "main=snpflow_original_testpmd_main", original, str(renamed)])
+            run(["objcopy", "--redefine-sym", "main=cvm_dpdk_original_testpmd_main", original, str(renamed)])
             test_link = [str(renamed) if w == original else w for w in link]
             if args.sanitize:
                 # Instrument the changed bridge and its generating paths too,

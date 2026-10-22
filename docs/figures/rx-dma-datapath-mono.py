@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Generate a paper-style SVG of the DPDK/NIC Rx DMA data path."""
 
+from pathlib import Path
+
 FONT = "Helvetica, Arial, 'Liberation Sans', sans-serif"
 GRAY = "#d9d9d9"
 W, H = 1040, 570
@@ -144,5 +146,5 @@ text(654, 550, "entry in use / filled", size=11, anchor="start")
 add('</g>')
 
 add('</svg>')
-open("/home/beijie/snp-dpdk/docs/figures/rx-dma-datapath.svg", "w").write("\n".join(out) + "\n")
+Path(__file__).with_name("rx-dma-datapath.svg").write_text("\n".join(out) + "\n")
 print("ok")

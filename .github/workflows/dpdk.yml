@@ -58,4 +58,4 @@ jobs:
           name: dpdk-meson-logs
           path: |
             ${{ runner.temp }}/dpdk-build/meson-logs/
-            ${{ runner.temp }}/dpdk-build/snpflow-upstream-tests/
+            ${{ runner.temp }}/dpdk-build/cvm-dpdk-upstream-tests/

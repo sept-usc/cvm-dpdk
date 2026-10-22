@@ -1,6 +1,6 @@
 # Licensing
 
-SNPFlow is a mixed-license source repository. The root [LICENSE](LICENSE)
+CVM-DPDK is a mixed-license source repository. The root [LICENSE](LICENSE)
 provides the MIT grant for original project material that is not covered by
 an existing file notice or a component scope below. It does not replace
 upstream copyrights, relicense DPDK or Linux, or remove their conditions.
@@ -22,7 +22,7 @@ The `GPL-2.0` identifier in these existing files means version 2 only, not
 [LICENSES/GPL-2.0-only.txt](LICENSES/GPL-2.0-only.txt) and
 [LICENSES/BSD-3-Clause.txt](LICENSES/BSD-3-Clause.txt).
 
-Original contributions to these BSD components are copyright 2026 SNPFlow
+Original contributions to these BSD components are copyright 2026 CVM-DPDK
 contributors. Existing copyright notices, including those for DPDK authors,
 are retained. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for notices
 from upstream source files represented by the integration material.

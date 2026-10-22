@@ -2,7 +2,7 @@
 # Copy sources to an explicitly selected CVM. Preserve remote build outputs.
 set -euo pipefail
 if [[ $# != 1 || "$1" != *:* ]]; then
-    echo "Usage: $0 user@host:/path/to/snp-dpdk/" >&2
+    echo "Usage: $0 user@host:/path/to/cvm-dpdk/" >&2
     exit 2
 fi
 rsync -az --exclude '.git' --exclude '.agents' --exclude '.codex' \

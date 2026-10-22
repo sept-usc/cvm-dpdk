@@ -82,15 +82,15 @@ def install(uninstall=False):
         local = subprocess.run(["git", "config", "--local", "--get", "core.hooksPath"],
                                stdout=subprocess.PIPE, text=True)
         if local.returncode != 0 or local.stdout.strip() != ".githooks":
-            print("No SNPFlow local hook configuration to remove.")
+            print("No CVM-DPDK local hook configuration to remove.")
             return 0
         subprocess.run(["git", "config", "--local", "--unset-all", "core.hooksPath"],
                        check=True)
-        print("Removed SNPFlow local hooks; inherited Git configuration applies again.")
+        print("Removed CVM-DPDK local hooks; inherited Git configuration applies again.")
         return 0
     if configured is not None and configured != ".githooks":
         print(f"Existing core.hooksPath={configured!r}; leaving it unchanged. "
-              "Integrate the SNPFlow checks into your existing hooks manually.", file=sys.stderr)
+              "Integrate the CVM-DPDK checks into your existing hooks manually.", file=sys.stderr)
         return 1
     # Also preserve default hooks that setting hooksPath would hide.
     default_hooks = Path(os.fsdecode(git("rev-parse", "--git-path", "hooks")).strip())
@@ -104,7 +104,7 @@ def install(uninstall=False):
         if not os.access(root / ".githooks" / name, os.X_OK):
             raise RuntimeError(f"Missing executable hook: {name}")
     subprocess.run(["git", "config", "--local", "core.hooksPath", ".githooks"], check=True)
-    print("Installed SNPFlow hooks for this repository (core.hooksPath=.githooks).")
+    print("Installed CVM-DPDK hooks for this repository (core.hooksPath=.githooks).")
     return 0
 
 
@@ -135,7 +135,7 @@ def pre_push():
     checker = Path(__file__).resolve()
     for revision in revisions:
         print(f"Testing push commit {revision[:12]} in an isolated checkout...", flush=True)
-        with tempfile.TemporaryDirectory(prefix="snpflow-push-") as directory:
+        with tempfile.TemporaryDirectory(prefix="cvm-dpdk-push-") as directory:
             checkout = Path(directory) / "repo"
             subprocess.run(["git", "-c", "core.hooksPath=/dev/null", "clone", "--quiet",
                             "--shared", "--no-checkout", "--", source, str(checkout)],
@@ -162,7 +162,7 @@ def main():
             return install(args.command == "uninstall")
         return pre_push()
     except (subprocess.CalledProcessError, OSError, RuntimeError, ValueError) as exc:
-        print(f"SNPFlow hook failed: {exc}", file=sys.stderr)
+        print(f"CVM-DPDK hook failed: {exc}", file=sys.stderr)
         return 1
 
 
